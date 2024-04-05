@@ -4,5 +4,4 @@ export const DBConfig = {
     user: "root",
     password: "root",
     database: "DAI-Eventos",
-
 }
