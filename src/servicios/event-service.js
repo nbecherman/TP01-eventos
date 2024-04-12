@@ -32,8 +32,28 @@ export class eventService2 {
   return "funciona3"
   }
 }
+
 export class eventService3 {
-getListadoParticipantes(){}
+getAllParticipantes(pageSize,page,id,username,first_name,last_name,attended,rating,description)
+{
+  return "funciona4"
+  //var query
+    /*En el listado, deberá mostrarse la lista de usuarios inscriptos para un cierto evento. Este
+endpoint me deberá permitir filtrar por nombre, apellido, nombre de usuario, si asistio al evento
+y por rating mayor a un determinado valor. Recuerde que puedo filtrar por uno solo o cualquier
+combinación de los parámetros. En el anexo puede encontrar un ejemplo de la respuesta.
+● GET - /event/{id}/enrollment?first_name=<nombre>
+● GET - /event/{id}/enrollment?last_name=<apellido>
+● GET - /event/{id}/enrollment?username=<nombre de usuario>
+● GET - /event/{id}/enrollment?attended=<true/false>
+● GET - /event/{id}/enrollment?rating=<4>*/ 
+
+}
+
+
+
+
+
 
 
 }

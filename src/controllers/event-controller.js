@@ -8,6 +8,7 @@ const EventService3 = new eventService3();
 
 
 
+
 const router = express.Router();
 
 router.get("/", (request, response) => {
@@ -84,6 +85,27 @@ try {
 });
 
 
+router.get("/:id/enrollment",(request,response) =>{
+  const pageSize = request.query.pageSize; //limit
+  const page = request.query.page; //offset
+  const id = request.query.id;
+  const username = request.query.username;
+  const first_name = request.query.first_name;
+  const last_name = request.query.last_name;
+  const attended = request.query.attended;
+  const rating = request.query.rating;
+  const description = request.query.description;
 
+if (attended=="true" || attended=="false" || attended != null) //chequear
+{
+  try {
+    const allParticipantes = EventService3.getAllParticipantes(1,1,1,"Nicolas123","Nicolas","Reifut",true,30,"holaa");
+    return response.json(allParticipantes);
+  } catch (error) {
+    return response.json("Un Error");
+  }
+}
+});
+  
 
 export default router;
