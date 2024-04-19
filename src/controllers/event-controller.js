@@ -1,111 +1,106 @@
-import express, { request } from "express";
-import { eventService, eventService1,eventService2,eventService3 } from "../servicios/event-service.js";
+import express from "express";
+import { eventService, eventService1, eventService2, eventService3 } from "../servicios/event-service.js";
 
 const EventService = new eventService();
 const EventService1 = new eventService1();
 const EventService2 = new eventService2();
 const EventService3 = new eventService3();
 
-
-
-
 const router = express.Router();
 
 router.get("/", (request, response) => {
-  //const limit = request.query.limit;
-  //const offset = request.query.offset;
-  const limit = 20;
-  const offset = 1;
-  try {
-    const allEvents = EventService.getAllEvents(limit, offset);
-    return response.json(allEvents);
-  } catch (error) {
-    return response.json("Un Error");
-  }
-});
+  const limit = request.query.limit; 
+  const offset = request.query.offset; 
 
-//3
+  limit = parseInt(limit); 
+  offset = parseInt(offset); 
 
-router.get("/", (request, response) => {
-  const pageSize = request.query.pageSize; //limit
-  const page = request.query.page; //offset
-  const nombre = request.query.nombre;
-  const categoria = request.query.categoria;
-  const fechaI = request.query.fechaI;
-  const tag = request.query.tag;
-
-  if (!isNaN(Date.parse(fechaI))) { //si no es date 
-  try {
-      const filter = EventService1.getEventByFilter(
-        1,
-        1,
-        "Gualeguaychu",
-        "Guaracha",
-        "2021/07/01",
-        "tag"
-      );
-      return response.json(filter);
+  if (!isNaN(limit) && !isNaN(offset)) {
+    try {
+      const allEvents = EventService.getAllEvents(limit, offset);
+      return response.json(allEvents);
     } catch (error) {
-      console.log("Un Error en el controller");
+      console.error("Un Error en el controller", error);
       return response.json("Un Error");
     }
   } else {
-    return response.json("La fecha no es datetime");
+    return response.json("Los parámetros limit y offset deben ser números.");
   }
 });
 
-//4
 router.get("/", (request, response) => {
-  const pageSize = request.query.pageSize; //limit
-  const page = request.query.page; //offset
-  const nombre = request.query.id; //pedir id desde el url
+  const pageSize = request.query.pageSize; 
+  const page = request.query.page;
+  const nombre = request.query.nombre; 
+  const categoria = request.query.categoria;
+  const fechaI = request.query.fechaI; 
+  const tag = request.query.tag;
 
-  try {
-      const filter = EventService1.getEventByFilter(
-        1,
-      );
+  pageSize = parseInt(pageSize);
+  page = parseInt(page);
+
+  if (!isNaN(pageSize) && !isNaN(page) && typeof nombre === "string" && typeof categoria === "string" && typeof tag === "string" && !isNaN(Date.parse(fechaI))) {
+    try {
+      const filter = EventService1.getEventByFilter(pageSize, page, nombre, categoria, fechaI, tag);
       return response.json(filter);
     } catch (error) {
-      console.log("Un Error en el controller");
+      console.error("Un Error en el controller", error);
       return response.json("Un Error");
     }
+  } else {
+    return response.json("Los parámetros no cumplen con los tipos de datos esperados.");
   }
-);
-
+});
 
 
 router.get("/:id",(request,response) =>{
-const id = request.query.id;
-try {
-  const allEvents = EventService2.getEventDetail(1);
-  return response.json(allEvents);
-} catch (error) {
-  return response.json("Un Error");
-}
-});
+  const id = request.params.id;
+  id = parseInt(id);
 
+
+  if (!isNaN(id)) {
+    try {
+      const allEvents = EventService2.getEventDetail(id);
+      return response.json(allEvents);
+    } catch (error) {
+      console.error("Un Error en el controller", error);
+      return response.json("Un Error");
+    }
+  } else {
+    return response.json("El parámetro ID no cumple con el tipo de dato esperado.");
+  }
+});
 
 router.get("/:id/enrollment",(request,response) =>{
-  const pageSize = request.query.pageSize; //limit
-  const page = request.query.page; //offset
-  const id = request.query.id;
-  const username = request.query.username;
-  const first_name = request.query.first_name;
-  const last_name = request.query.last_name;
+
+  const pageSize = request.query.pageSize; 
+  const page = request.query.page; 
+  const id = request.query.id; 
+  const username = request.query.username; 
+  const first_name = request.query.first_name; 
+  const last_name = request.query.last_name; 
   const attended = request.query.attended;
-  const rating = request.query.rating;
+  const rating = request.query.rating; 
   const description = request.query.description;
 
-if (attended=="true" || attended=="false" || attended != null) //chequear
-{
-  try {
-    const allParticipantes = EventService3.getAllParticipantes(1,1,1,"Nicolas123","Nicolas","Reifut",true,30,"holaa");
-    return response.json(allParticipantes);
-  } catch (error) {
-    return response.json("Un Error");
+  pageSize = parseInt(pageSize);
+  page = parseInt(page);
+  id = parseInt(id);
+
+  if (!isNaN(pageSize) && !isNaN(page) && !isNaN(id) && typeof username === "string" && typeof first_name === "string" && typeof last_name === "string" && (attended === "true" || attended === "false" || attended === null) && !isNaN(rating) && typeof description === "string") {
+    try {
+      const allParticipantes = EventService3.getAllParticipantes(pageSize, page, id, username, first_name, last_name, attended, rating, description);
+      return response.json(allParticipantes);
+    } catch (error) {
+      console.error("Un Error en el controller", error);
+      return response.json("Un Error");
+    }
+  } else {
+    return response.json("Los parámetros no cumplen con los tipos de datos esperados.");
   }
-}
 });
-  
+
+
+
 
 export default router;

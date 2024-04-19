@@ -56,6 +56,9 @@ combinación de los parámetros. En el anexo puede encontrar un ejemplo de la re
 
 
 
+
+
+
 }
 /* const query = `select * from events limit ${pageSize} offset ${requestedPage}`;
         const query2 = `select count(*) from events`
