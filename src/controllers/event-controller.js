@@ -107,7 +107,7 @@
   router.post("/", (request, response) => {
     try {
     const nuevoEvento = request.body; 
-    const eventoCreado = EventService4.createEvento(nuevoEvento);
+    const eventoCreado = EventService4.createEvent(nuevoEvento);
     return response.json(eventoCreado);
     } catch (error) {
     console.error("Error al crear una nuevo evento:", error);
@@ -120,7 +120,7 @@ router.put("/:id", (request, response) => {
   if (!isNaN(id)) {
   try {
     const eventoActualizado = request.body; 
-    const eventoModificada = EventService5.updateEvento(id,eventoActualizado);
+    const eventoModificada = EventService5.updateEvent(id,eventoActualizado);
     return response.json(eventoModificada);
   } catch (error) {
     console.error("Error al actualizar el evento:", error);

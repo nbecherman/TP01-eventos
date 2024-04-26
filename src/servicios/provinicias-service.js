@@ -1,35 +1,67 @@
 
+import { query } from "express";
+//hacer repositorio
+//ProvinceRepository()
 export class provinciaService {
-    getAllProvincias(limit, offset)
-    {
-      return ("funciona6")
+    getAllProvincias(limit, offset){
+    
+        const bd = new ProvinceRepository();
+        const provincias = await bd.getAllProvincias();
+        const resultado = {
+            
+                collection: provincias,
+                pagination:
+                    {
+                        limit: limit,
+                        offset: offset,
+                        nextPage: http://localhost:3000${nextPage},
+                        total: provincias.length
+                    }
+                };
+        return resultado;
+        }
     }  
-}
+
 
 export class provinciaService2 {
   createProvincia(nuevaProvincia)
   {
-    return ("funciona7")
-  }  
+    const bd = new ProvinceRepository();
+    const resultado = bd.createProvincia(nuevaProvincia);
+    if(resultado != null){
+        return true;
+    }
+    return false;
 }
+  }  
 
 export class provinciaService3 {
   updateProvincia(id,provinciaActualizada)
   {
-    return ("funciona8")
+    const bd = new ProvinceRepository();
+        const resultado = bd.updateProvincia(id,provinciaActualizada);
+        if(resultado != null){
+            return true;
+        }
+        return false;
+    }
+
   }  
-}
+
 
 export class provinciaService4 {
   deleteProvincia(id)
   {
-    return ("funciona9")
+    const bd = new ProvinceRepository();
+    return bd.deleteProvincia(id);
   }  
 }
 
 export class provinciaService5 {
   getProvinciaDetail(id)
   {
-    return ("funciona10")
+    const bd = new ProvinceRepository();
+    const resultado = bd.getProvinciaDetail(id);
+    return resultado;
   }  
 }

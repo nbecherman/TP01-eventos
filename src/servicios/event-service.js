@@ -1,59 +1,105 @@
+import { query } from "express";
+//falta hacer el repositorio
+//EventRepository()
 export class eventService {
   getAllEvents(limit, offset) {
-    const resultado = Bd.getAllEvents(pageSize, requestedPage);
-    
+    const bd = new EventRepository();
+    const eventos = await bd.getAllEvents();
+    const resultado = {
+        
+            collection: eventos,
+            pagination:
+                {
+                    limit: limit,
+                    offset: offset,
+                    nextPage: http://localhost:3000${nextPage},
+                    total: eventos.length
+                }
+            };
+    return resultado;
+    }
 
   }
-}
+
 
 export class eventService1 {
   getEventByFilter(pageSize, page, nombre, categoria, fechaI, tag) {
-    return "funciona2";
+    const bd = new EventRepository();
+    const eventos = await bd.getEventByFilter(pageSize, page, nombre, categoria, fechaI, tag);
+    const resultado = {
+        
+            collection: eventos,
+            pagination:
+                {
+                    limit: limit,
+                    offset: offset,
+                    nextPage: http://localhost:3000${nextPage},
+                    total: eventos.length
+                }
+            };
+    return resultado;
+    }
   }
-}
 
 export class eventService2 {
   getEventDetail(id) 
   {
-  return "funciona3"
+    const bd = new EventRepository();
+    const resultado =  bd.getEventDetail(id);
+    return resultado;
   }
 }
 
 export class eventService3 {
 getAllParticipantes(pageSize,page,id,username,first_name,last_name,attended,rating,description)
 {
-  return "funciona4"
+  const bd = new EventRepository();
+  const participants =  bd.getAllParticipantes(id, mensajeCondicion);
+  const resultado = {
+  
+      collection: participants,
+      pagination:
+          {
+              limit: limit,
+              offset: offset,
+              nextPage: `http://localhost:3000${nextPage}`,
+              total: eventos.length
+          }
+  };
+  return resultado;
 }}
 
 
 
 export class eventService4 {
-  createEvento(nuevoEvento)
+  createEvent(nuevoEvento)
   {
-    return "funciona"
-  }
+    const bd = new EventRepository();
+    const resultado =  bd.createEvent(nuevoEvento);
+    if(resultado != null){
+        return true;
+    }
+    return false;
 }
+  }
+
 
 export class eventService5 {
-  updateEvento(eventoModificado)
+  updateEvent(id, eventoActualizado)
   {
-    return "funciona"
-  }
+    const bd = new EventsRepository();
+    const resultado = bd.updateEvent(id, eventoActualizado);
+    if(resultado != null){
+        return true;
+    }
+    return false;
 }
 
 
+  }
 
 
-/* const query = `select * from events limit ${pageSize} offset ${requestedPage}`;
-        const query2 = `select count(*) from events`
-        throw new Error("Error en el servicio");
 
-        return{
-            collection: query,
-            pagination:{
-                limit: pageSize,
-                offset: requestedPage,
-                nextPage: "http://localhost:3000/event?limit=${pageSize}&offset=${requestedPage + 1}",
-            total: query2,
-            },
-        };*/
+
+
+

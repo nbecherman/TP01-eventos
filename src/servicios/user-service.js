@@ -1,30 +1,27 @@
-
+//import { query } from "express";
+//hacer repositorio
+//UserRepository()
 export class userService {
-    postAutenticacionUser(username,password,token)
+    autenticacionUser(username,password,token)
     {
-        /*Para realizar peticiones a los endpoints subsiguientes el usuario deberá contar con un token que
-obtendrá al autenticarse. Para ello, deberán desarrollar el endpoint de login, que permita obtener
-el token y el de registrarse.
-El endpoint encargados de la autenticación y sus respectivos bodys deberán ser*/ 
-     
-    //hacer query insert
-
-      return ("funciona5")
+      const bd = new UserRepository();
+      const resultado =  bd.autenticacionUser(username, password, token);
+      if(resultado.length > 0){
+          return true;
+      }
+      return false;
+  }
     }  
-}
 
 
 export class userService1 {
-    postRegistrarseUser(first_name,last_name,username,password)
+     registrarseUser(first_name,last_name,username,password)
     {
-
-        /*Para realizar peticiones a los endpoints subsiguientes el usuario deberá contar con un token que
-obtendrá al autenticarse. Para ello, deberán desarrollar el endpoint de login, que permita obtener
-el token y el de registrarse.
-El endpoint encargados de la autenticación y sus respectivos bodys deberán ser*/ 
-     
-    //hacer query insert
-
-      return ("funciona6")
-    }  
+      const bd = new UserRepository();
+      const resultado = bd.registrarseUser(first_name,last_name,username,password);
+      if(resultado.length > 0){
+          return false;
+      }
+      return true;
+  }
 }
