@@ -1,10 +1,14 @@
   import express from "express";
-  import { eventService, eventService1, eventService2, eventService3 } from "../servicios/event-service.js";
+  import { eventService, eventService1, eventService2, eventService3, eventService4, eventService5 } from "../servicios/event-service.js";
 
   const EventService = new eventService();
   const EventService1 = new eventService1();
   const EventService2 = new eventService2();
   const EventService3 = new eventService3();
+  const EventService4 = new eventService4();
+  const EventService5 = new eventService5();
+
+
 
   const router = express.Router();
 
@@ -99,7 +103,34 @@
     }
   });
 
+  
+  router.post("/", (request, response) => {
+    try {
+    const nuevoEvento = request.body; 
+    const eventoCreado = EventService4.createEvento(nuevoEvento);
+    return response.json(eventoCreado);
+    } catch (error) {
+    console.error("Error al crear una nuevo evento:", error);
+    return response.json("Un Error");
+    }
+});
+
+router.put("/:id", (request, response) => {
+  const id = request.params.id;
+  if (!isNaN(id)) {
+  try {
+    const eventoActualizado = request.body; 
+    const eventoModificada = EventService5.updateEvento(id,eventoActualizado);
+    return response.json(eventoModificada);
+  } catch (error) {
+    console.error("Error al actualizar el evento:", error);
+    return response.json("Un Error");
+  }
+  } else {
+      return response.json("El parámetro ID no cumple con el tipo de dato esperado.");
+  }
+});
 
 
 
-  export default router;
+export default router;
