@@ -20,10 +20,9 @@ export class provinciaService {
                 };
         return resultado;
         }
-    }  
+   
 
 
-export class provinciaService2 {
   createProvincia(nuevaProvincia)
   {
     const bd = new ProvinceRepository();
@@ -33,9 +32,8 @@ export class provinciaService2 {
     }
     return false;
 }
-  }  
+   
 
-export class provinciaService3 {
   updateProvincia(id,provinciaActualizada)
   {
     const bd = new ProvinceRepository();
@@ -46,18 +44,16 @@ export class provinciaService3 {
         return false;
     }
 
-  }  
+  
 
 
-export class provinciaService4 {
   deleteProvincia(id)
   {
     const bd = new ProvinceRepository();
     return bd.deleteProvincia(id);
   }  
-}
 
-export class provinciaService5 {
+
   getProvinciaDetail(id)
   {
     const bd = new ProvinceRepository();

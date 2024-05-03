@@ -3,6 +3,7 @@ import { query } from "express";
 //EventRepository()
 export class eventService {
   getAllEvents(limit, offset) {
+
     const bd = new EventRepository();
     const eventos = await bd.getAllEvents();
     const resultado = {
@@ -19,10 +20,9 @@ export class eventService {
     return resultado;
     }
 
-  }
 
 
-export class eventService1 {
+
   getEventByFilter(pageSize, page, nombre, categoria, fechaI, tag) {
     const bd = new EventRepository();
     const eventos = await bd.getEventByFilter(pageSize, page, nombre, categoria, fechaI, tag);
@@ -39,18 +39,16 @@ export class eventService1 {
             };
     return resultado;
     }
-  }
+  
 
-export class eventService2 {
   getEventDetail(id) 
   {
     const bd = new EventRepository();
     const resultado =  bd.getEventDetail(id);
     return resultado;
   }
-}
 
-export class eventService3 {
+
 getAllParticipantes(pageSize,page,id,username,first_name,last_name,attended,rating,description)
 {
   const bd = new EventRepository();
@@ -67,11 +65,10 @@ getAllParticipantes(pageSize,page,id,username,first_name,last_name,attended,rati
           }
   };
   return resultado;
-}}
+}
 
 
 
-export class eventService4 {
   createEvent(nuevoEvento)
   {
     const bd = new EventRepository();
@@ -81,10 +78,9 @@ export class eventService4 {
     }
     return false;
 }
-  }
+  
 
 
-export class eventService5 {
   updateEvent(id, eventoActualizado)
   {
     const bd = new EventsRepository();
@@ -99,7 +95,4 @@ export class eventService5 {
   }
 
 
-
-
-
-
+  //const response = { collection : events , pagination : { limit : parsedLimit , offset : parsedOffset , nextPage : (( parsedOffset + 1 ) * parsedLimit <= totalCount ) ? ` ${ process . env . BASE_URL } / ${ path } ?limit= ${ parsedLimit } &offset= ${ parsedOffset + 1 }${ ( eventName ) ? `&eventName= ${ eventName } ` : null}${ ( eventCategory ) ? `&eventCategory= ${ eventCategory } `` : null} ${ ( eventDate ) ? `&eventDate= ${ eventDate } ` : null}${ ( eventTag ) ? `&eventTag= ${ eventTag } ` : null} ` : null , total : totalCount , }

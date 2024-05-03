@@ -1,14 +1,9 @@
 import express from "express";
-import {provinciaService,provinciaService2,provinciaService3,provinciaService4,provinciaService5} from "../servicios/provinicias-service.js";
+import provinciaService from "../servicios/provinicias-service.js";
 
 const router = express.Router();
 
 const ProvinciaService = new provinciaService();
-const ProvinciaService2 = new provinciaService2();
-const ProvinciaService3 = new provinciaService3();
-const ProvinciaService4 = new provinciaService4();
-const ProvinciaService5 = new provinciaService5();
-
 
 
 router.get("/", (request, response) => {
@@ -33,7 +28,7 @@ router.get("/", (request, response) => {
     router.post("/", (request, response) => {
         try {
         const nuevaProvincia = request.body; 
-        const provinciaCreada = ProvinciaService2.createProvincia(nuevaProvincia);
+        const provinciaCreada = ProvinciaService.createProvincia(nuevaProvincia);
         return response.json(provinciaCreada);
         } catch (error) {
         console.error("Error al crear una nueva provincia:", error);
@@ -46,7 +41,7 @@ router.get("/", (request, response) => {
         if (!isNaN(id)) {
         try {
           const provinciaActualizada = request.body; 
-          const provinciaModificada = ProvinciaService3.updateProvincia(id,provinciaActualizada);
+          const provinciaModificada = ProvinciaService.updateProvincia(id,provinciaActualizada);
           return response.json(provinciaModificada);
         } catch (error) {
           console.error("Error al actualizar la provincia:", error);
@@ -62,7 +57,7 @@ router.get("/", (request, response) => {
         const id = request.params.id;
         if (!isNaN(id)) {
         try {
-        ProvinciaService4.deleteProvincia(id);
+          ProvinciaService.deleteProvincia(id);
           return response.json("Provincia eliminada exitosamente.");
         } catch (error) {
           console.error("Error al eliminar la provincia:", error);
@@ -80,7 +75,7 @@ router.get("/", (request, response) => {
     id = parseInt(id);
     if (!isNaN(id)) {
       try {
-        const provincia = ProvinciaService5.getProvinciaDetail(id);
+        const provincia = ProvinciaService.getProvinciaDetail(id);
         return response.json(provincia);
       } catch (error) {
         console.error("Un Error en el controller", error);

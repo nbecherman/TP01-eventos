@@ -1,20 +1,15 @@
   import express from "express";
-  import { eventService, eventService1, eventService2, eventService3, eventService4, eventService5 } from "../servicios/event-service.js";
+  import eventService from "../servicios/event-service.js";
 
   const EventService = new eventService();
-  const EventService1 = new eventService1();
-  const EventService2 = new eventService2();
-  const EventService3 = new eventService3();
-  const EventService4 = new eventService4();
-  const EventService5 = new eventService5();
-
 
 
   const router = express.Router();
 
   router.get("/", (request, response) => {
-    const limit = request.query.limit; 
-    const offset = request.query.offset; 
+    const limit = request.query.limit;  //cantidad maxima de elementos por pagina
+    const offset = request.query.offset; // el num de pagina por el cual voy a operar
+    //URL : La url de la siguiente pagina.
 
     limit = parseInt(limit); 
     offset = parseInt(offset); 
@@ -45,7 +40,7 @@
 
     if (!isNaN(pageSize) && !isNaN(page) && typeof nombre === "string" && typeof categoria === "string" && typeof tag === "string" && !isNaN(Date.parse(fechaI))) {
       try {
-        const filter = EventService1.getEventByFilter(pageSize, page, nombre, categoria, fechaI, tag);
+        const filter = EventService.getEventByFilter(pageSize, page, nombre, categoria, fechaI, tag);
         return response.json(filter);
       } catch (error) {
         console.error("Un Error en el controller", error);
@@ -63,7 +58,7 @@
 
     if (!isNaN(id)) {
       try {
-        const allEvents = EventService2.getEventDetail(id);
+        const allEvents = EventService.getEventDetail(id);
         return response.json(allEvents);
       } catch (error) {
         console.error("Un Error en el controller", error);
@@ -92,7 +87,7 @@
 
     if (!isNaN(pageSize) && !isNaN(page) && !isNaN(id) && typeof username === "string" && typeof first_name === "string" && typeof last_name === "string" && (attended === "true" || attended === "false" || attended === null) && !isNaN(rating) && typeof description === "string") {
       try {
-        const allParticipantes = EventService3.getAllParticipantes(pageSize, page, id, username, first_name, last_name, attended, rating, description);
+        const allParticipantes = EventService.getAllParticipantes(pageSize, page, id, username, first_name, last_name, attended, rating, description);
         return response.json(allParticipantes);
       } catch (error) {
         console.error("Un Error en el controller", error);
@@ -107,7 +102,7 @@
   router.post("/", (request, response) => {
     try {
     const nuevoEvento = request.body; 
-    const eventoCreado = EventService4.createEvent(nuevoEvento);
+    const eventoCreado = EventService.createEvent(nuevoEvento);
     return response.json(eventoCreado);
     } catch (error) {
     console.error("Error al crear una nuevo evento:", error);
@@ -120,7 +115,7 @@ router.put("/:id", (request, response) => {
   if (!isNaN(id)) {
   try {
     const eventoActualizado = request.body; 
-    const eventoModificada = EventService5.updateEvent(id,eventoActualizado);
+    const eventoModificada = EventService.updateEvent(id,eventoActualizado);
     return response.json(eventoModificada);
   } catch (error) {
     console.error("Error al actualizar el evento:", error);

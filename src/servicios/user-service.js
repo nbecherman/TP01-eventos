@@ -11,10 +11,9 @@ export class userService {
       }
       return false;
   }
-    }  
+  
 
 
-export class userService1 {
      registrarseUser(first_name,last_name,username,password)
     {
       const bd = new UserRepository();
