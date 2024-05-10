@@ -131,8 +131,64 @@ export default class eventRepository
         return returnEntity;
       }  
 
-   
-    }
+    
+      async updateEvent(evento) { ////////////////
+        var returnEntity = null;
+        try {
+          const sql = `Insert into events(name,description,id_event_category,id_event_location,start_date,duration_in_minutes,price,enabled_for_enrollment,max__assistance) values ("1","$9","$2","$3","$4","$5,"$6","$7","$8")`;
+          const values = [evento.name, evento.id_event_category, evento.id_event_location, evento.start_date, evento.duration_in_minutes, evento.price, evento.enabled_for_enrollment, evento.max_assistance, evento.description];
+          const result = await this.DBClient.query(sql, values);
+    
+          if (result.rowsAffected.length > 0) {
+            returnEntity = result.rowsAffected[0];
+          }
+        } catch (error) {
+          console.log(error);
+        }
+        return returnEntity;
+      }  
+
+      async InscripcionEvento(evento, users) { //terminar
+        var returnEntity = null
+        try {
+          var sql = ""
+          if (evento.enabled_for_enrollment) {
+            sql = `Insert INTO event_enrollment (id_event, id_user, description, registration_date_time,attended,observations,rating) VALUES ($1,$2,$3,$4,$5,$6,$7)`;
+          }else return returnEntity;
+    
+          const values = [evento.id, users.id,enrollment.description, Date.now(),enrollment.attended, enrollment.observations, enrollment.rating]
+          const result = await this.DBClient.query(sql, values);
+    
+          if (result.rowsAffected.length > 0) {
+            returnEntity = result.rowsAffected[0];
+          }
+        } catch (error) {
+          console.log(error);
+        }
+        return returnEntity
+      }
+    
+      async UpdateRating(idEvento,rating) {
+        var returnEntity = null;
+        try {
+          const sql = `update event_enrollments SET rating=$1 WHERE id=$2`;
+          const values = [idEvento,rating];
+          const result = await this.DBClient.query(sql, values);
+    
+          if (result.rowsAffected.length > 0) {
+            returnEntity = result.rowsAffected[0];
+          }
+        } catch (error) {
+          console.log(error);
+        }
+        return returnEntity;
+      } 
+}
+
+
+
+
+    
       
     
 

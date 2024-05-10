@@ -122,6 +122,33 @@ router.put("/:id", (request, response) => {
   }
 });
 
+router.post("/:id/enrollment", (request, response) => {
+
+  const idEvento = request.query.idEvento; 
+  const attended = request.query.attended; 
+  const rating = request.query.rating; 
+  const descripcion = request.query.descripcion; 
+  const observations = request.query.observations;
+  try {
+    const inscripcion = EventService.InscripcionEvento(idEvento,attended,rating,descripcion,observations);
+    return res.json(inscripcion);
+  } catch (error) {
+    console.log(error);
+    return res.json(error);
+  }
+});
+
+router.patch("/:id/enrollment", (request, response) => {
+  const idEvento = request.params.idEvento;
+  const rating = request.query.rating;
+  try {
+    const cambiar = EventService.CambiarRating(idEvento, rating);
+    return res.json(cambiar);
+  } catch (error) {
+    console.log(error);
+    return res.json(error);
+  }
+});
 
 
 
