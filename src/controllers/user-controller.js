@@ -1,11 +1,12 @@
 import express from "express";
 import userService from "../servicios/user-service.js";
+import { AuthMiddleware } from "../auth/authMiddleware.js";
 
 const UserService = new userService();
 
 const router = express.Router();
 
-router.post("/login", (request, response) => {
+router.post("/login", AuthMiddleware, (request, response) => {
   const { username, password } = request.body;
 
   if (typeof username === "string" && typeof password === "string") {

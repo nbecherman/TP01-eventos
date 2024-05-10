@@ -1,7 +1,6 @@
 import pg from "pg";
 import { DBConfig } from "./db.js";
 
-const provincerepository = new provinceRepository();
 
 export default class provinceRepository
 {

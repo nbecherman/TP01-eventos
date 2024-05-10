@@ -1,5 +1,6 @@
   import express from "express";
   import eventService from "../servicios/event-service.js";
+  import { AuthMiddleware } from "../auth/authMiddleware.js";
 
   const EventService = new eventService();
 
@@ -71,23 +72,18 @@
 
   router.get("/:id/enrollment",(request,response) =>{
 
-    const pageSize = request.query.pageSize; 
-    const page = request.query.page; 
-    const id = request.query.id; 
+    const name = request.query.name; 
     const username = request.query.username; 
     const first_name = request.query.first_name; 
     const last_name = request.query.last_name; 
     const attended = request.query.attended;
     const rating = request.query.rating; 
-    const description = request.query.description;
 
-    pageSize = parseInt(pageSize);
-    page = parseInt(page);
-    id = parseInt(id);
 
-    if (!isNaN(pageSize) && !isNaN(page) && !isNaN(id) && typeof username === "string" && typeof first_name === "string" && typeof last_name === "string" && (attended === "true" || attended === "false" || attended === null) && !isNaN(rating) && typeof description === "string") {
+
+    if (typeof name === "string" && typeof username === "string" && typeof first_name === "string" && typeof last_name === "string" && (attended === "true" || attended === "false" || attended === null) && !isNaN(rating)) {
       try {
-        const allParticipantes = EventService.getAllParticipantes(pageSize, page, id, username, first_name, last_name, attended, rating, description);
+        const allParticipantes = EventService.getAllParticipantes(name,username, first_name, last_name, attended, rating);
         return response.json(allParticipantes);
       } catch (error) {
         console.error("Un Error en el controller", error);
