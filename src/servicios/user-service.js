@@ -1,6 +1,11 @@
 //import { query } from "express";
 //hacer repositorio
 //UserRepository()
+
+import { query } from "express";
+import userRepository from "../repositories/category-repositories.js"
+const UserRepository= new userRepository();
+
 export class userService {
     autenticacionUser(username,password,token)
     {

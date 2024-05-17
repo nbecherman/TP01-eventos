@@ -1,7 +1,7 @@
-
 import { query } from "express";
-//hacer repositorio
-//ProvinceRepository()
+import provinceRepository from "../repositories/event-repositories.js"
+const ProvinceRepository= new provinceRepository();
+
 export class provinciaService {
     getAllProvincias(limit, offset){
     

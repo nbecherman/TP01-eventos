@@ -17,7 +17,7 @@ router.get("/", (request, response) => {
       const AllProvincias = ProvinciaService.getAllProvincias(limit, offset);
       response.json(AllProvincias);
     } catch (error) {
-      console.error("Error al obtener todas las provincias:", error);
+      console.error("Error al obtener  todas las provincias:", error);
       return response.json("Un Error");
     }}else {
         return response.json("Los parámetros limit y offset deben ser números.");

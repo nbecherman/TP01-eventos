@@ -1,6 +1,7 @@
 import { query } from "express";
-//falta hacer el repositorio
-//EventRepository()
+import eventRepository from "../repositories/event-repositories.js"
+const EventRepository= new eventRepository();
+
 export class eventService {
   getAllEvents(limit, offset) {
 
@@ -83,7 +84,7 @@ getAllParticipantes(pageSize,page,id,username,first_name,last_name,attended,rati
 
   updateEvent(id, eventoActualizado)
   {
-    const bd = new EventsRepository();
+    const bd = new EventRepository();
     const resultado = bd.updateEvent(id, eventoActualizado);
     if(resultado != null){
         return true;
