@@ -6,7 +6,7 @@ const router = express.Router();
 const ProvinciaService = new provinciaService();
 
 
-router.get("/", (request, response) => {
+router.get("/", async (request, response) => {
     const { limit, offset } = request.query;
 
     limit = parseInt(limit); 
@@ -14,7 +14,7 @@ router.get("/", (request, response) => {
 
     if (!isNaN(limit) && !isNaN(offset)) {
     try {
-      const AllProvincias = ProvinciaService.getAllProvincias(limit, offset);
+      const AllProvincias = await ProvinciaService.getAllProvincias(limit, offset);
       response.json(AllProvincias);
     } catch (error) {
       console.error("Error al obtener  todas las provincias:", error);
@@ -25,10 +25,10 @@ router.get("/", (request, response) => {
   });
 
 
-    router.post("/", (request, response) => {
+    router.post("/", async (request, response) => {
         try {
         const nuevaProvincia = request.body; 
-        const provinciaCreada = ProvinciaService.createProvincia(nuevaProvincia);
+        const provinciaCreada = await ProvinciaService.createProvincia(nuevaProvincia);
         return response.json(provinciaCreada);
         } catch (error) {
         console.error("Error al crear una nueva provincia:", error);
@@ -36,12 +36,12 @@ router.get("/", (request, response) => {
         }
     });
 
-    router.put("/:id", (request, response) => {
+    router.put("/:id", async (request, response) => {
         const id = request.params.id;
         if (!isNaN(id)) {
         try {
           const provinciaActualizada = request.body; 
-          const provinciaModificada = ProvinciaService.updateProvincia(id,provinciaActualizada);
+          const provinciaModificada = await ProvinciaService.updateProvincia(id,provinciaActualizada);
           return response.json(provinciaModificada);
         } catch (error) {
           console.error("Error al actualizar la provincia:", error);
@@ -53,11 +53,11 @@ router.get("/", (request, response) => {
       });
 
 
-      router.delete("/:id", (request, response) => {
+      router.delete("/:id",async (request, response) => {
         const id = request.params.id;
         if (!isNaN(id)) {
         try {
-          ProvinciaService.deleteProvincia(id);
+          await ProvinciaService.deleteProvincia(id);
           return response.json("Provincia eliminada exitosamente.");
         } catch (error) {
           console.error("Error al eliminar la provincia:", error);
@@ -70,7 +70,7 @@ router.get("/", (request, response) => {
       
 
 
-  router.get("/:id",(request,response) =>{
+  router.get("/:id",async(request,response) =>{
     const id = request.params.id;
     id = parseInt(id);
     if (!isNaN(id)) {
