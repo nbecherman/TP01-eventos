@@ -1,5 +1,7 @@
-import pg from "pg";
+import pg from 'pg';
 import { DBConfig } from "./db.js";
+
+
 
 
 export default class eventRepository
@@ -55,10 +57,10 @@ export default class eventRepository
       }
 
       
-    async getEventById(id) {
+    async getEventDetail(id) {
         let returnEntity = null;
         try {
-          var sql = `select e.name, e.description, ec.name, el.name, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max__assistance, ep.name from events e inner join event_categories ec on ec.id=events.id_event_category inner join event_tags et on et.id_event=events.id inner join tags t on et.id_tag=t.id inner join locations el on e.id_event_location = el.id inner join users u on e.id_creator_user = u.id inner join provinces ep on el.id_province = ep.id where e.id=$1`;
+          var sql = `SELECT e.name, e.description, ec.name as Category, el.name as Location, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance FROM events e inner join event_categories ec on e.id_event_category=ec.id inner join event_tags et on e.id=et.id_event inner join tags t on et.id_tag=t.id inner join locations el on e.id_event_location = el.id inner join users u on e.id_creator_user = u.id where e.id=$1`;
           const values = [id];
           const result = await this.DBClient.query(sql, values);
     
@@ -68,6 +70,7 @@ export default class eventRepository
         } catch (error) {
           console.log(error);
         }
+        console.log(returnEntity);
         return returnEntity;
       }
 

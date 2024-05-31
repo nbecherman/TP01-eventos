@@ -53,13 +53,14 @@
     });
 
 
-    router.get("/:id",(request,response) =>{
+    router.get("/:id",async (request,response) =>{
       let id = request.params.id;
       id = parseInt(id);
 
       if (!isNaN(id)) {
         try {
-          const allEvents = EventService.getEventDetail(id);
+          const allEvents = await EventService.getEventDetail(id);
+
           return response.json(allEvents);
         } catch (error) {
           console.error("Un Error en el controller", error);
