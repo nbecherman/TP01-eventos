@@ -1,63 +1,41 @@
 import { query } from "express";
-import provinceRepository from "../repositories/event-repositories.js"
+import provinceRepository from "../repositories/province-repositories.js"
 const ProvinceRepository= new provinceRepository();
 
-export class provinciaService {
-    getAllProvincias(limit, offset){
+export default class provinciaService {
     
-        const bd = new ProvinceRepository();
-        const provincias = await bd.getAllProvincias();
-        const resultado = {
-            
-                collection: provincias,
-                pagination:
-                    {
-                        limit: limit,
-                        offset: offset,
-                        nextPage: http://localhost:3000${nextPage},
-                        total: provincias.length
-                    }
-                };
-        return resultado;
-        }
-   
+    async getAllProvincias(limit, offset){
+      
+          const getAllProvincias = await ProvinceRepository.getAllProvincias(limit, offset);
+          return getAllProvincias;
+          }
+    
+
+          async getProvinciaDetail(id)
+          {
+            const getProvinciaDetail = await ProvinceRepository.getProvinciaDetail(id);
+            return resultado;
+          }  
+
+          async createProvincia(nuevaProvincia)
+          {
+            const createProvincia = await ProvinceRepository.createProvincia(nuevaProvincia);
+            return "create";
+          }
+    
+
+            async updateProvincia(id,provinciaActualizada)
+            {
+                  const updateProvincia = await ProvinceRepository.updateProvincia(id,provinciaActualizada);
+                  return "actualizado";
+            }
+
+          async deleteProvincia(id)
+          {
+            const ProvinceRepository = await ProvinceRepository.deleteProvincia(id);
+            return "eliminado";
+          }  
 
 
-  createProvincia(nuevaProvincia)
-  {
-    const bd = new ProvinceRepository();
-    const resultado = bd.createProvincia(nuevaProvincia);
-    if(resultado != null){
-        return true;
-    }
-    return false;
-}
-   
 
-  updateProvincia(id,provinciaActualizada)
-  {
-    const bd = new ProvinceRepository();
-        const resultado = bd.updateProvincia(id,provinciaActualizada);
-        if(resultado != null){
-            return true;
-        }
-        return false;
-    }
-
-  
-
-
-  deleteProvincia(id)
-  {
-    const bd = new ProvinceRepository();
-    return bd.deleteProvincia(id);
-  }  
-
-
-  getProvinciaDetail(id)
-  {
-    const bd = new ProvinceRepository();
-    const resultado = bd.getProvinciaDetail(id);
-    return resultado;
-  }  
-}
+  }

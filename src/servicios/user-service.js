@@ -6,7 +6,7 @@ import { query } from "express";
 import userRepository from "../repositories/category-repositories.js"
 const UserRepository= new userRepository();
 
-export class userService {
+export default class userService {
     autenticacionUser(username,password,token)
     {
       const bd = new UserRepository();
@@ -29,3 +29,4 @@ export class userService {
       return true;
   }
 }
+

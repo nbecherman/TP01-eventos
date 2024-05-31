@@ -6,7 +6,7 @@ const UserService = new userService();
 
 const router = express.Router();
 
-router.post("/login", AuthMiddleware, (request, response) => {
+/*router.post("/login", AuthMiddleware, (request, response) => {
   const { username, password } = request.body;
 
   if (typeof username === "string" && typeof password === "string") {
@@ -29,5 +29,5 @@ router.post("/register", (request, response) => {
     return response.status(400).json("Todos los campos del registro deben ser cadenas de texto.");
   }
 });
-
+*/
 export default router;

@@ -148,6 +148,22 @@ export default class eventRepository
         return returnEntity;
       }  
 
+      async UpdateRating(idEvento,rating) {
+        var returnEntity = null;
+        try {
+          const sql = `update event_enrollments SET rating=$1 WHERE id=$2`;
+          const values = [idEvento,rating];
+          const result = await this.DBClient.query(sql, values);
+    
+          if (result.rowsAffected.length > 0) {
+            returnEntity = result.rowsAffected[0];
+          }
+        } catch (error) {
+          console.log(error);
+        }
+        return returnEntity;
+      } 
+
       async InscripcionEvento(evento, users) { //terminar
         var returnEntity = null
         try {
@@ -168,21 +184,7 @@ export default class eventRepository
         return returnEntity
       }
     
-      async UpdateRating(idEvento,rating) {
-        var returnEntity = null;
-        try {
-          const sql = `update event_enrollments SET rating=$1 WHERE id=$2`;
-          const values = [idEvento,rating];
-          const result = await this.DBClient.query(sql, values);
-    
-          if (result.rowsAffected.length > 0) {
-            returnEntity = result.rowsAffected[0];
-          }
-        } catch (error) {
-          console.log(error);
-        }
-        return returnEntity;
-      } 
+
 }
 
 
