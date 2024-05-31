@@ -29,8 +29,8 @@
     });
 
     router.get("/", (request, response) => {
-      const pageSize = request.query.pageSize; 
-      const page = request.query.page;
+      let pageSize = request.query.pageSize; 
+      let page = request.query.page;
       const nombre = request.query.nombre; 
       const categoria = request.query.categoria;
       const fechaI = request.query.fechaI; 
@@ -54,7 +54,7 @@
 
 
     router.get("/:id",(request,response) =>{
-      const id = request.params.id;
+      let id = request.params.id;
       id = parseInt(id);
 
       if (!isNaN(id)) {

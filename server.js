@@ -8,7 +8,7 @@ import CategoryController from "./src/controllers/category-controller.js";
 
 const app = express(); // Init API REST
 app.use(express.json()); // Middleware to parse JSON
-const port = 3000;
+const port = 3100;
 
 app.use("/event", EventController );
 app.use("/user", UserController );
