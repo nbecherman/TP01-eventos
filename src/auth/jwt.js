@@ -1,11 +1,12 @@
-import jwt from 'jsonwebtoken';
-/*revisar G*/
-const secretKey = process.env.JWT_SECRET;
+import jwt from "jsonwebtoken"
+import "dotenv/config"
 
-export default function generateToken(user) {
-    const payload = {
-        id: user.id,
-        username: user.username
-    };
-    return jwt.sign(payload, secretKey, { expiresIn: '1h' });
+export default async function (token){
+var payloadOriginal = null;
+try {
+    payloadOriginal = jwt.verify(token, process.env.SECRET_KEY);
+} catch (error) {
+    return null;
+}
+    return payloadOriginal
 }

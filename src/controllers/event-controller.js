@@ -1,47 +1,23 @@
   import express from "express";
   import eventService from "../servicios/event-service.js";
   import { AuthMiddleware } from "../auth/authMiddleware.js";
+  import Evento from "../entities/Evento.js";
 
   const EventService = new eventService();
-
-
-    const router = express.Router();
+  const router = express.Router();
 
     router.get("/", async (request, response) => {
-      const limit = request.query.limit;  //cantidad maxima de elementos por pagina
-      const offset = request.query.offset; // el num de pagina por el cual voy a operar
-      //URL : La url de la siguiente pagina.
-
-      limit = parseInt(limit); 
-      offset = parseInt(offset); 
-
-      if (!isNaN(limit) && !isNaN(offset)) {
-        try {
-          const allEvents = await EventService.getAllEvents(limit, offset);
-          return response.json(allEvents);
-        } catch (error) {
-          console.error("Un Error en el controller", error);
-          return response.json("Un Error");
-        }
-      } else {
-        return response.json("Los parámetros limit y offset deben ser números.");
-      }
-    });
-
-    router.get("/", async (request, response) => {
-      let pageSize = request.query.pageSize; 
-      let page = request.query.page;
-      const nombre = request.query.nombre; 
-      const categoria = request.query.categoria;
-      const fechaI = request.query.fechaI; 
-      const tag = request.query.tag;
-
-      pageSize = parseInt(pageSize);
-      page = parseInt(page);
+      const Evento = {};
+      const pageSize = request.query.pageSize; 
+      const page = request.query.page;
+      Evento.name = request.query.nombre; 
+      Evento.category = request.query.categoria;
+      Evento.startDate = request.query.fechaI; 
+      Evento.tag  = request.query.tag;
 
       if (!isNaN(pageSize) && !isNaN(page) && typeof nombre === "string" && typeof categoria === "string" && typeof tag === "string" && !isNaN(Date.parse(fechaI))) {
         try {
-          const filter = await EventService.getEventByFilter(pageSize, page, nombre, categoria, fechaI, tag);
+          const filter = await EventService.getEventByFilter(Evento, pageSize, page);
           return response.json(filter);
         } catch (error) {
           console.error("Un Error en el controller", error);
@@ -55,11 +31,10 @@
 
     router.get("/:id",async (request,response) =>{
       let id = request.params.id;
-      id = parseInt(id);
 
       if (!isNaN(id)) {
         try {
-          const allEvents = await EventService.getEventDetail(id);
+          let allEvents = await EventService.getEventDetail(id);
 
           return response.json(allEvents);
         } catch (error) {

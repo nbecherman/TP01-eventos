@@ -14,14 +14,19 @@ export default class eventRepository
     }
 
 
-    async getAllEvents(limit, offset) {
-        const sql = "SELECT * FROM events limit = $1 offset = $2";
-        const values = [limit, offset];
-        return await this.DBClient.query(sql, values);
+    async cantidadEventosPag() { //revisar
+      var returnEntity = 0;
+      try {
+        var sql = "SELECT COUNT(*) FROM events"
+        const result = await this.BDclient.query(sql)
+        console.log(result.rows);
+        return result.rows[0].count
+      } catch (error) {
+        return error;
+      }
     }
 
-
-    async getEventByFilter(pageSize, page, nombre, categoria, fechaI, tag) {
+    async getEventByFilter(Evento, pageSize, page) {
         var returnEntity = null;
     
         try {

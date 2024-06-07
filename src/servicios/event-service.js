@@ -4,16 +4,10 @@ const EventRepository= new eventRepository();
 
 export default class eventService {
  
-  async getAllEvents(limit, offset) 
-  {
-    const getAllEvents = await EventRepository.getAllEvents(limit, offset);
-    return getAllEvents;
-    }
 
-
-  async getEventByFilter(pageSize, page, nombre, categoria, fechaI, tag) 
+  async getEventByFilter(Evento, pageSize, page) 
     {
-    const getEventByFilter = await EventRepository.getEventByFilter(pageSize, page, nombre, categoria, fechaI, tag);
+    const getEventByFilter = await EventRepository.getEventByFilter(Evento, pageSize, page);
     return getEventByFilter;
     }
   
