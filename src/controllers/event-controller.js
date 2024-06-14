@@ -1,33 +1,30 @@
   import express from "express";
   import eventService from "../servicios/event-service.js";
-  import { AuthMiddleware } from "../auth/authMiddleware.js";
+ // import { AuthMiddleware } from "../auth/authMiddleware.js";
   import Evento from "../entities/Evento.js";
 
   const EventService = new eventService();
   const router = express.Router();
-
-    router.get("/", async (request, response) => {
+  
+  router.get("/", async (request, response) => {
       const Evento = {};
-      const pageSize = request.query.pageSize; 
-      const page = request.query.page;
-      Evento.name = request.query.nombre; 
-      Evento.category = request.query.categoria;
-      Evento.startDate = request.query.fechaI; 
-      Evento.tag  = request.query.tag;
-
-      if (!isNaN(pageSize) && !isNaN(page) && typeof nombre === "string" && typeof categoria === "string" && typeof tag === "string" && !isNaN(Date.parse(fechaI))) {
-        try {
-          const filter = await EventService.getEventByFilter(Evento, pageSize, page);
+      const limit = parseInt(request.query.limit) || 10; // Valor por defecto - registros por pagina
+      const offset = parseInt(request.query.offset)||0;  //empieza desde 0 - del 0-10. punto de inicio
+      Evento.name = request.query.name;
+      Evento.category = request.query.category;
+      Evento.startDate = request.query.startDate;
+      Evento.tag = request.query.tag;
+  
+      try {
+          const filter = await EventService.getEventByFilter(Evento, limit, offset);
+          console.log("entre")
           return response.json(filter);
-        } catch (error) {
+      } catch (error) {
           console.error("Un Error en el controller", error);
-          return response.json("Un Error");
-        }
-      } else {
-        return response.json("Los parámetros no cumplen con los tipos de datos esperados.");
+          return response.status(500).json({ error: "Un Error" });
       }
-    });
-
+  });
+    
 
     router.get("/:id",async (request,response) =>{
       let id = request.params.id;

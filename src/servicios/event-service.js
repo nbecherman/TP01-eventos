@@ -1,17 +1,18 @@
 import { query } from "express";
 import eventRepository from "../repositories/event-repositories.js"
+import  Pagination from "../entities/pagination.js"
+
 const EventRepository= new eventRepository();
 
 export default class eventService {
  
 
-  async getEventByFilter(Evento, pageSize, page) 
-    {
-    const getEventByFilter = await EventRepository.getEventByFilter(Evento, pageSize, page);
-    return getEventByFilter;
-    }
+    async getEventByFilter(Evento, limit, offset) {
+      const eventos = await EventRepository.getEventByFilter(Evento, limit, offset);
+      const total = await EventRepository.cantidadEventosPag(Evento);
+      return Pagination.BuildPagination(eventos, total, limit, offset);
+  }
   
-
   async getEventDetail(id) 
   {
     const getEventDetail = await EventRepository.getEventDetail(id);

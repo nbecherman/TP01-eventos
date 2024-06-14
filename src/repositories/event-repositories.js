@@ -19,48 +19,61 @@ export default class eventRepository
       try {
         var sql = "SELECT COUNT(*) FROM events"
         const result = await this.BDclient.query(sql)
-        console.log(result.rows);
         return result.rows[0].count
       } catch (error) {
         return error;
       }
     }
 
-    async getEventByFilter(Evento, pageSize, page) {
-        var returnEntity = null;
-    
-        try {
-          var sql = `select e.name, e.description, ec.name, el.name, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max__assistance from events e limit $1 offset $2 inner join event_categories ec on events.id_event_category=ec.id inner join event_tags et on events.id=et.id_event inner join tags t on et.id_tag=t.id inner join locations el on e.id_event_location = el.id inner join users u on e.id_creator_user = u.id where`;
-    
-          if (Evento.name != null) {
-            sql += ` events.name=$3 and`;
-          }
-          if (Evento.category != null) {
-            sql += ` ec.name=$4 and`;
-          }
-          if (Evento.startDate != null) {
-            sql += ` events.start_date=$5 and`;
-          }
-          if (Evento.tag != null) {
-            sql += ` t.name=$6 and`;
-          }
-          if (sql.endsWith(" and")) {
-            sql = sql.slice(0, -4);
-          }
-          if (sql.endsWith(" where")) {
-            sql = sql.slice(0, -6);
-          }
-          const values = [pageSize, page, nombre, categoria, fechaI, tag];
-          const result = await this.DBClient.query(sql, values);
-          if (result.rows.length > 0) {
-            returnEntity = result.rows;
-          }
-        } catch (error) {
-          console.log(error);
-        }
-        return returnEntity;
+    async getEventByFilter(Evento, limit, offset) {
+      let sql = `
+          SELECT e.name, e.description, ec.name AS category, el.name AS location, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance 
+          FROM events e
+          INNER JOIN event_categories ec ON e.id_event_category = ec.id 
+          INNER JOIN event_tags et ON e.id = et.id_event 
+          INNER JOIN tags t ON et.id_tag = t.id 
+          INNER JOIN locations el ON e.id_event_location = el.id 
+          INNER JOIN users u ON e.id_creator_user = u.id 
+      `;
+      
+      const conditions = [];//para aplicarle las condiciones del where
+      const values = [];//valores de los parametros
+  
+      if (Evento.name) {
+          conditions.push(`e.name ILIKE '%' || $${values.length + 1} || '%'`);
+          values.push(Evento.name);
       }
-
+      if (Evento.category) {
+          conditions.push(`ec.name ILIKE '%' || $${values.length + 1} || '%'`);
+          values.push(Evento.category);
+      }
+      if (Evento.startDate) {
+          conditions.push(`e.start_date = $${values.length + 1}`);
+          values.push(Evento.startDate);
+      }
+      if (Evento.tag) {
+          conditions.push(`t.name ILIKE '%' || $${values.length + 1} || '%'`);
+          values.push(Evento.tag);
+      }
+  
+      if (conditions.length > 0) { //si se agregaron condiciones
+          sql += " WHERE " + conditions.join(" AND "); //si hay las une con un AND
+      }
+  
+      sql += " ORDER BY e.start_date DESC LIMIT $1 OFFSET $2"; 
+      values.push(BigInt(limit));
+      values.push(BigInt(offset));
+      
+      try {
+          const result = await this.DBClient.query(sql, values);
+          if ((result.rows.length > 0)) {
+            return result.rows; //matriz con los resultados de la consulta
+          }
+      } catch (error) {
+          console.error("Error en la consulta:", error);
+      }
+  }
+  
       
     async getEventDetail(id) {
         let returnEntity = null;
