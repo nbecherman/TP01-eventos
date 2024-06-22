@@ -8,8 +8,8 @@
   
   router.get("/", async (request, response) => {
       const Evento = {};
-      const limit = parseInt(request.query.limit) || 10; // Valor por defecto - registros por pagina
-      const offset = parseInt(request.query.offset)||0;  //empieza desde 0 - del 0-10. punto de inicio
+      const limit = request.query.limit || 10; // Valor por defecto - registros por pagina
+      const offset = request.query.offset||0;  //empieza desde 0 - del 0-10. punto de inicio
       Evento.name = request.query.name;
       Evento.category = request.query.category;
       Evento.startDate = request.query.startDate;
@@ -26,14 +26,19 @@
   });
     
 
-    router.get("/:id",async (request,response) =>{
+    router.get("/:id",async (request,response) =>{   //terminado (:
       let id = request.params.id;
 
       if (!isNaN(id)) {
         try {
-          let allEvents = await EventService.getEventDetail(id);
-
-          return response.json(allEvents);
+          const allEvents = await EventService.getEventDetail(id);
+          if (allEvents) {
+            return res.status(200).json(allEvents);
+          }
+          else
+          {
+            return res.status(404).send(); //inexistente
+          }
         } catch (error) {
           console.error("Un Error en el controller", error);
           return response.json("Un Error");
@@ -43,29 +48,30 @@
       }
     });
 
-    router.get("/:id/enrollment", async(request,response) =>{
 
+
+    router.get("/:id/enrollment", async(request,response) =>{ //terminado (:
+
+      const id = request.params.id; 
       const name = request.query.name; 
       const username = request.query.username; 
       const first_name = request.query.first_name; 
       const last_name = request.query.last_name; 
       const attended = request.query.attended;
       const rating = request.query.rating; 
-      if (typeof name === "string" && typeof username === "string" && typeof first_name === "string" && typeof last_name === "string" && (attended === "true" || attended === "false" || attended === null) && !isNaN(rating)) {
         try {
-          const allParticipantes = await EventService.getAllParticipantes(name,username, first_name, last_name, attended, rating);
+          const allParticipantes = await EventService.getAllParticipantes(id,name,username, first_name, last_name, attended, rating);
+          console.log(allParticipantes)
           return response.json(allParticipantes);
         } catch (error) {
           console.error("Un Error en el controller", error);
           return response.json("Un Error");
-        }
-      } else {
-        return response.json("Los parámetros no cumplen con los tipos de datos esperados.");
-      }
+        
+      } 
     });
 
     
-    router.post("/", async(request, response) => {
+    router.post("/", async(request, response) => { 
       try {
       const nuevoEvento = request.body; 
       const eventoCreado = await EventService.createEvent(nuevoEvento);

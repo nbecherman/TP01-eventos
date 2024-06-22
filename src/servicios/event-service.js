@@ -1,6 +1,7 @@
 import { query } from "express";
 import eventRepository from "../repositories/event-repositories.js"
-import  Pagination from "../entities/pagination.js"
+import { Pagination} from "../utils/Paginacion.js";
+const PaginacionConfig = new Pagination();
 
 const EventRepository= new eventRepository();
 
@@ -8,10 +9,21 @@ export default class eventService {
  
 
     async getEventByFilter(Evento, limit, offset) {
-      const eventos = await EventRepository.getEventByFilter(Evento, limit, offset);
-      const total = await EventRepository.cantidadEventosPag(Evento);
-      return Pagination.BuildPagination(eventos, total, limit, offset);
-  }
+      const parsedLimit = PaginacionConfig.parseLimit(limit) 
+      const parsedOffset = PaginacionConfig.parseOffset(offset)
+      const cantidad =  Number.parseInt(await EventRepository.cantidadEventosPag());
+      const nextPage=((parsedOffset+1) * parsedLimit<=cantidad) ?`/event?${(Evento.name) ?`&name=${Evento.name}`:''}${(Evento.category) ?`&category=${Evento.category}` : ''}${(Evento.startDate) ?`&startDate=${Evento.startDate}`:''}${(Evento.tag) ?`&tag=${Evento.tag}`:''}`:"null"
+      const paginacion = PaginacionConfig.buildPaginationDto(parsedLimit, parsedOffset, cantidad, nextPage)
+      const eventosPorFiltro = await EventRepository.getEventByFilter(Evento, parsedLimit, parsedOffset)
+      console.log(eventosPorFiltro + "sss")
+      if (eventosPorFiltro!=null) {
+        const collection = {eventosPorFiltro, paginacion}
+        console.log(collection + "sss")
+        return collection;
+      }else{
+        return {eventosPorFiltro}
+      }  
+    }
   
   async getEventDetail(id) 
   {
@@ -20,9 +32,10 @@ export default class eventService {
   }
 
 
-  async getAllParticipantes(pageSize,page,id,username,first_name,last_name,attended,rating,description)
+  async getAllParticipantes(id,name,username, first_name, last_name, attended, rating)
   {
-    const getAllParticipantes = await EventRepository.getAllParticipantes(id, mensajeCondicion);
+    const getAllParticipantes = await EventRepository.getAllParticipantes(id,name,username, first_name, last_name, attended, rating);
+    console.log(getAllParticipantes)
     return getAllParticipantes;
   }
 
