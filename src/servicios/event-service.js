@@ -39,9 +39,9 @@ export default class eventService {
     return getAllParticipantes;
   }
 
-  async createEvent(nuevoEvento)
+  async createEvent(evento)
   {
-    await EventRepository.createEvent(nuevoEvento);
+    await EventRepository.createEvent(evento);
     return "Insertado";
   }
   

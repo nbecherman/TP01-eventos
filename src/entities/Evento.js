@@ -9,7 +9,7 @@ class Evento{
     price;
     enabled_for_enrollment;
     max_assistance;
-    creator_user;
+    id_creator_user;
 }
 
 export default Evento;

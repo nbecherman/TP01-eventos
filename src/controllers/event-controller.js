@@ -1,9 +1,15 @@
   import express from "express";
   import eventService from "../servicios/event-service.js";
+  import locationService from "../servicios/location-service.js";
+
  // import { AuthMiddleware } from "../auth/authMiddleware.js";
   import Evento from "../entities/Evento.js";
+  import EventLocation from "../entities/EventLoc.js";
+
 
   const EventService = new eventService();
+  const LocationService = new locationService();
+
   const router = express.Router();
   
   router.get("/", async (request, response) => {
@@ -62,7 +68,7 @@
         try {
           const allParticipantes = await EventService.getAllParticipantes(id,name,username, first_name, last_name, attended, rating);
           console.log(allParticipantes)
-          return response.json(allParticipantes);
+          return res.status(200).json(allParticipantes);
         } catch (error) {
           console.error("Un Error en el controller", error);
           return response.json("Un Error");
@@ -71,11 +77,54 @@
     });
 
     
-    router.post("/", async(request, response) => { 
+    router.post("/", async(request, response) => {  //casi terminado, buscar capacidad y auth
+      const Evento = {};
+      Evento.name = request.body.name;
+      Evento.description = request.body.description;
+      Evento.id_event_category = request.body.id_event_category
+      Evento.id_event_location = request.body.id_event_location
+      Evento.start_date = request.body.start_date;
+      Evento.duration_in_minutes = request.body.duration_in_minutes;
+      Evento.price = request.body.price;
+      Evento.enabled_for_enrollment = request.body.enabled_for_enrollment;
+      Evento.max_assistance = request.body.max_assistance;
+      Evento.id_creator_user = request.body.id_creator_user; //hacer con nuevo usuario
+
       try {
-      const nuevoEvento = request.body; 
-      const eventoCreado = await EventService.createEvent(nuevoEvento);
-      return response.json(eventoCreado);
+        var max_capacity = await LocationService.getEventLocationById(Evento.id_event_location) //arreglar esto
+        max_capacity = 85000 
+        console.log(max_capacity + " sss")
+
+        if (Evento.name && Evento.description && Evento.id_event_category && Evento.id_event_location && Evento.start_date && Evento.duration_in_minutes && Evento.price && Evento.enabled_for_enrollment && Evento.max_assistance && Evento.id_creator_user) 
+        {
+          if (max_capacity > Evento.max_assistance)
+          {
+             if(Evento.name.length >3 && Evento.description.length >3) 
+            {
+              if  (Evento.price > 0 && Evento.duration_in_minutes > 0) 
+              {
+                const eventoCreado = await EventService.createEvent(Evento);
+                return response.status(201).json(eventoCreado);
+              } 
+              else
+              {
+                return response.status(400).send("el precio y/o la duracion es menor a 0 ")
+              }
+            }
+            else
+            {
+              return response.status(400).send("el nombre y/o descripcion tiene menos de 3 caracteres ")
+            }
+          }
+          else
+          {
+            return response.status(400).send("La asistencia es mayor a la capacidad")
+          }
+        }
+        else
+        {
+          return response.status(400).send("Error en el tipo de dato o faltan")
+        }
       } catch (error) {
       console.error("Error al crear una nuevo evento:", error);
       return response.json("Un Error");

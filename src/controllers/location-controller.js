@@ -1,4 +1,4 @@
-/*import express from "express";
+import express from "express";
 import locationService from "../servicios/location-service.js";
 const router = express.Router();
 const LocationService = new locationService();
@@ -12,7 +12,7 @@ const LocationService = new locationService();
         } catch (error) {
           return res.json(error);
         }
-    });*/
+    });
     
 
 

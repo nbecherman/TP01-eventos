@@ -249,8 +249,8 @@ export default class eventRepository
       async createEvent(evento) {
         var returnEntity = null;
         try {
-          const sql = `Insert into events(name,description,id_event_category,id_event_location,start_date,duration_in_minutes,price,enabled_for_enrollment,max__assistance) values ("1","$9","$2","$3","$4","$5,"$6","$7","$8")`;
-          const values = [evento.name, evento.id_event_category, evento.id_event_location, evento.start_date, evento.duration_in_minutes, evento.price, evento.enabled_for_enrollment, evento.max_assistance, evento.description];
+          const sql = `Insert into events(name,description,id_event_category,id_event_location,start_date,duration_in_minutes,price,enabled_for_enrollment,max_assistance,id_creator_user) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`;
+          const values = [evento.name, evento.description, evento.id_event_category, evento.id_event_location, evento.start_date, evento.duration_in_minutes, evento.price, evento.enabled_for_enrollment, evento.max_assistance,evento.id_creator_user];
           const result = await this.DBClient.query(sql, values);
     
           if (result.rowsAffected.length > 0) {
@@ -262,7 +262,6 @@ export default class eventRepository
         return returnEntity;
       }  
 
-    
       async updateEvent(evento) { ////////////////
         var returnEntity = null;
         try {
