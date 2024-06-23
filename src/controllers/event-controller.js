@@ -77,7 +77,7 @@
     });
 
     
-    router.post("/",authMiddleware,async(request, response) => {  //casi terminado, buscar capacidad y auth
+    router.post("/",authMiddleware,async(request, response) => {  //casi terminado
       const Evento = {};
       Evento.name = request.body.name;
       Evento.description = request.body.description;
@@ -88,16 +88,15 @@
       Evento.price = request.body.price;
       Evento.enabled_for_enrollment = request.body.enabled_for_enrollment;
       Evento.max_assistance = request.body.max_assistance;
-      Evento.id_creator_user = request.user.id; //hacer con nuevo usuario
+      Evento.id_creator_user = request.user.id; //del auth
 
       try {
-        var max_capacity = await LocationService.getEventLocationById(Evento.id_event_location) //arreglar esto
-        max_capacity = 85000 
-        console.log(max_capacity + " sss")
+
+        var eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location) //arreglar esto
 
         if (Evento.name && Evento.description && Evento.id_event_category && Evento.id_event_location && Evento.start_date && Evento.duration_in_minutes && Evento.price && Evento.enabled_for_enrollment && Evento.max_assistance && Evento.id_creator_user) 
         {
-          if (max_capacity > Evento.max_assistance)
+          if (eventolocacion.max_capacity > Evento.max_assistance)
           {
              if(Evento.name.length >3 && Evento.description.length >3) 
             {

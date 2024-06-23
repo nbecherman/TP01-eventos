@@ -14,7 +14,7 @@ export default class locationRepository
     async getEventLocationById(id){
         let returnEntity = null;
       try {
-        var sql = `SELECT max_capacity FROM event_locations WHERE id=$1`;
+        var sql = `SELECT * FROM event_locations WHERE id=$1`;
         const values = [id];
         const result = await this.DBClient.query(sql, values);
 

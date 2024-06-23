@@ -13,12 +13,12 @@ router.post("/login", async (request, response) => { //terminado (:
     const token = await UserService.login(user, pass);
 
     if(token!="Usuario o Contraseña no existen"){
-    return res.status(200).json({
+    return response.status(200).json({
       "succes":true,
       "message":"Logueado correctamente",
       "token":token});
     }else{
-      return res.status(401).json({
+      return response.status(401).json({
         "succes":false,
         "message":"Logueado correctamente",
         "token":""});
