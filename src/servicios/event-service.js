@@ -11,14 +11,12 @@ export default class eventService {
     async getEventByFilter(Evento, limit, offset) {
       const parsedLimit = PaginacionConfig.parseLimit(limit) 
       const parsedOffset = PaginacionConfig.parseOffset(offset)
-      const cantidad =  Number.parseInt(await EventRepository.cantidadEventosPag());
+      const cantidad =  Number.parseInt(await EventRepository.cantidadEventosPag()); //cantidad de eventos
       const nextPage=((parsedOffset+1) * parsedLimit<=cantidad) ?`/event?${(Evento.name) ?`&name=${Evento.name}`:''}${(Evento.category) ?`&category=${Evento.category}` : ''}${(Evento.startDate) ?`&startDate=${Evento.startDate}`:''}${(Evento.tag) ?`&tag=${Evento.tag}`:''}`:"null"
       const paginacion = PaginacionConfig.buildPaginationDto(parsedLimit, parsedOffset, cantidad, nextPage)
       const eventosPorFiltro = await EventRepository.getEventByFilter(Evento, parsedLimit, parsedOffset)
-      console.log(eventosPorFiltro + "sss")
       if (eventosPorFiltro!=null) {
         const collection = {eventosPorFiltro, paginacion}
-        console.log(collection + "sss")
         return collection;
       }else{
         return {eventosPorFiltro}

@@ -2,7 +2,7 @@
   import eventService from "../servicios/event-service.js";
   import locationService from "../servicios/location-service.js";
 
- // import { AuthMiddleware } from "../auth/authMiddleware.js";
+  import authMiddleware from "../auth/authMiddleware.js";
   import Evento from "../entities/Evento.js";
   import EventLocation from "../entities/EventLoc.js";
 
@@ -77,7 +77,7 @@
     });
 
     
-    router.post("/", async(request, response) => {  //casi terminado, buscar capacidad y auth
+    router.post("/",authMiddleware,async(request, response) => {  //casi terminado, buscar capacidad y auth
       const Evento = {};
       Evento.name = request.body.name;
       Evento.description = request.body.description;
@@ -88,7 +88,7 @@
       Evento.price = request.body.price;
       Evento.enabled_for_enrollment = request.body.enabled_for_enrollment;
       Evento.max_assistance = request.body.max_assistance;
-      Evento.id_creator_user = request.body.id_creator_user; //hacer con nuevo usuario
+      Evento.id_creator_user = request.user.id; //hacer con nuevo usuario
 
       try {
         var max_capacity = await LocationService.getEventLocationById(Evento.id_event_location) //arreglar esto

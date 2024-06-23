@@ -6,28 +6,26 @@ const UserService = new userService();
 
 const router = express.Router();
 
-/*router.post("/login", AuthMiddleware, (request, response) => {
-  const { username, password } = request.body;
+router.post("/login", async (request, response) => { //terminado (:
+  const user = request.body.username;
+  const pass = request.body.password;
+  try {
+    const token = await UserService.login(user, pass);
 
-  if (typeof username === "string" && typeof password === "string") {
-    const crypto = require('crypto');
-    const token = crypto.randomBytes(64).toString('hex');
-    const loginToken = UserService.autenticacionUser(username, password, token);
-    return response.json(loginToken);
-  } else {
-    return response.status(400).json("El nombre de usuario y la contraseña deben ser cadenas de texto.");
+    if(token!="Usuario o Contraseña no existen"){
+    return res.status(200).json({
+      "succes":true,
+      "message":"Logueado correctamente",
+      "token":token});
+    }else{
+      return res.status(401).json({
+        "succes":false,
+        "message":"Logueado correctamente",
+        "token":""});
+    }
+  } catch (error) {
+    return response.json(error);
   }
 });
 
-router.post("/register", (request, response) => {
-  const { first_name, last_name, username, password } = request.body;
-
-  if (typeof first_name === "string" && typeof last_name === "string" && typeof username === "string" && typeof password === "string") {
-    const registerUser = UserService.registrarseUser(first_name, last_name, username, password);
-    return response.json(registerUser);
-  } else {
-    return response.status(400).json("Todos los campos del registro deben ser cadenas de texto.");
-  }
-});
-*/
 export default router;

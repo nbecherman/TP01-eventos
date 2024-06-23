@@ -96,7 +96,7 @@ export default class eventRepository
     }
 
     async getEventByFilter(Evento, limit, offset) {
-      
+        
         var query = `
           SELECT e.name, e.description, ec.name AS category, el.name AS location, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance 
           FROM events e

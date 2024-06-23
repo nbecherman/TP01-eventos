@@ -3,30 +3,33 @@
 //UserRepository()
 
 import { query } from "express";
-import userRepository from "../repositories/category-repositories.js"
+
+import userRepository from "../repositories/user-repositories.js"
+import login from "../auth/login.js";
 const UserRepository= new userRepository();
 
 export default class userService {
-    autenticacionUser(username,password,token)
-    {
-      const bd = new UserRepository();
-      const resultado =  bd.autenticacionUser(username, password, token);
-      if(resultado.length > 0){
-          return true;
-      }
-      return false;
-  }
-  
 
+     async login(user, pass) {
+    try{
+    const Usuario= await this.getUserByPayload(user,pass) //obtiene el nombre de usuario
+    console.log(Usuario)
+    if(Usuario!=null){
+      const token =await login(Usuario) //mando para sacar el id
+      return token;
+    }else{
+      return "Usuario o Contraseña no existen";
+    }
+    }catch(error){
+      console.log(error);
+      return res.json(error);
+    }
+}
 
-     registrarseUser(first_name,last_name,username,password)
-    {
-      const bd = new UserRepository();
-      const resultado = bd.registrarseUser(first_name,last_name,username,password);
-      if(resultado.length > 0){
-          return false;
-      }
-      return true;
+async getUserByPayload(user,pass){
+    return await UserRepository.getUserByName(user,pass) //obtengo el user
+
   }
+
 }
 
