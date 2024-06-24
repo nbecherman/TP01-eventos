@@ -130,22 +130,65 @@
       }
   });
 
-  router.put("/:id",async (request, response) => {
-    const id = request.params.id;
-    if (!isNaN(id)) {
-    try {
-      const eventoActualizado = request.body; 
-      const eventoModificada =await EventService.updateEvent(id,eventoActualizado);
-      return response.json(eventoModificada);
-    } catch (error) {
-      console.error("Error al actualizar el evento:", error);
-      return response.json("Un Error");
-    }
-    } else {
-        return response.json("El parámetro ID no cumple con el tipo de dato esperado.");
-    }
-  });
+  router.put("/",authMiddleware,async(request, response) => {  //casi terminado
+    const Evento = {};
+    Evento.name = request.body.name;
+    Evento.description = request.body.description;
+    Evento.id_event_category = request.body.id_event_category
+    Evento.id_event_location = request.body.id_event_location
+    Evento.start_date = request.body.start_date;
+    Evento.duration_in_minutes = request.body.duration_in_minutes;
+    Evento.price = request.body.price;
+    Evento.enabled_for_enrollment = request.body.enabled_for_enrollment;
+    Evento.max_assistance = request.body.max_assistance;
+    Evento.id = request.body.id; 
 
+    try {
+
+      var eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location) //arreglar esto
+      var idevento = await EventService.getEventDetail(Evento.id) //arreglar esto
+
+      if (idevento.id) {
+      if (Evento.name && Evento.description && Evento.id_event_category && Evento.id_event_location && Evento.start_date && Evento.duration_in_minutes && Evento.price && Evento.enabled_for_enrollment && Evento.max_assistance && Evento.id_creator_user) 
+      {
+        if (eventolocacion.max_capacity > Evento.max_assistance)
+        {
+           if(Evento.name.length >3 && Evento.description.length >3) 
+          {
+            if  (Evento.price > 0 && Evento.duration_in_minutes > 0) 
+            {
+              const eventoCreado = await EventService.createEvent(Evento);
+              return response.status(201).json(eventoCreado);
+            } 
+            else
+            {
+              return response.status(400).send("el precio y/o la duracion es menor a 0 ")
+            }
+          }
+          else
+          {
+            return response.status(400).send("el nombre y/o descripcion tiene menos de 3 caracteres ")
+          }
+        }
+        else
+        {
+          return response.status(400).send("La asistencia es mayor a la capacidad")
+        }
+      }
+      else
+      {
+        return response.status(400).send("Error en el tipo de dato o faltan")
+      }
+    }
+    else
+    {
+      return response.status(400).send("No existe el id del evento")
+    }
+    } catch (error) {
+    console.error("Error al crear una nuevo evento:", error);
+    return response.json("Un Error");
+    }
+});
   router.post("/:id/enrollment",async(request, response) => {
 
     const idEvento = request.query.idEvento; 

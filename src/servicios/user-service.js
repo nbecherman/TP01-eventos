@@ -10,7 +10,7 @@ const UserRepository= new userRepository();
 
 export default class userService {
 
-     async login(user, pass) {
+    async login(user, pass) {
     try{
     const Usuario= await this.getUserByPayload(user,pass) //obtiene el nombre de usuario
     console.log(Usuario)
@@ -18,7 +18,7 @@ export default class userService {
       const token =await login(Usuario) //mando para sacar el id
       return token;
     }else{
-      return "Usuario o Contraseña no existen";
+      return "Usuario o Contraseña no existen"; //para el if 
     }
     }catch(error){
       console.log(error);
@@ -26,9 +26,13 @@ export default class userService {
     }
 }
 
-async getUserByPayload(user,pass){
+async register(first_name,last_name,username,password)
+{
+  await UserRepository.registrarse(first_name,last_name,username,password);
+  return "Insertado";
+}
+ async getUserByPayload(user,pass){
     return await UserRepository.getUserByName(user,pass) //obtengo el user
-
   }
 
 }

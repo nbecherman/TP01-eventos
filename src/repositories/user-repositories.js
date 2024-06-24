@@ -24,4 +24,19 @@ export default class userRepository
         return returnEnity;
     }
 
+    async registrarse(first_name,last_name,username,password){
+        let returnEnity=null;
+        try{
+            const sql="INSERT INTO users(first_name,last_name,username,password) VALUES($1,$2,$3,$4)";
+            const values=[first_name,last_name,username,password];
+            const result=await this.DBClient.query(sql,values);
+            if(result.rows.length>0){
+                returnEnity=result.rows[0];
+            }
+
+        }catch(error){
+            console.log(error)
+        }
+        return returnEnity;
+    }
 }
