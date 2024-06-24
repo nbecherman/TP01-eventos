@@ -22,8 +22,8 @@ export default class eventRepository
             e.description, 
             json_build_object (
                 'id', ec.id,
-                'name', ec.name
-            ) AS event_category,
+                'name', ec.name) 
+                AS event_category,
             json_build_object (
                 'id', el.id,
                 'name', el.name,
@@ -167,6 +167,21 @@ export default class eventRepository
         return returnEntity;
       }
 
+      async getEventId(id) {
+        const query = "SELECT * FROM events WHERE id = $1";
+         let returnEntity = null;
+         try {
+           const values = [id];
+           const result = await this.DBClient.query(query, values);
+           if (result.rows.length > 0) {
+             returnEntity = result.rows[0];
+           }
+         } catch (error) {
+           console.log(error);
+         }
+         console.log(returnEntity);
+         return returnEntity;
+       }
 
       async getAllParticipantes(id, name, username, first_name, last_name, attended, rating) {
         let returnEntity = null;
@@ -265,8 +280,47 @@ export default class eventRepository
       async updateEvent(evento) { ////////////////
         var returnEntity = null;
         try {
-          const sql = `Insert into events(name,description,id_event_category,id_event_location,start_date,duration_in_minutes,price,enabled_for_enrollment,max__assistance) values ("1","$9","$2","$3","$4","$5,"$6","$7","$8")`;
-          const values = [evento.name, evento.id_event_category, evento.id_event_location, evento.start_date, evento.duration_in_minutes, evento.price, evento.enabled_for_enrollment, evento.max_assistance, evento.description];
+          const sql = `
+          UPDATE events
+          SET name = $2,
+              description = $3,
+              id_event_category = $4,
+              id_event_location = $5,
+              start_date = $6,
+              duration_in_minutes = $7,
+              price = $8,
+              enabled_for_enrollment = $9,
+              max_assistance = $10
+          WHERE id = $1
+        `;
+        const values = [
+          evento.id,
+          evento.name,
+          evento.description,
+          evento.id_event_category,
+          evento.id_event_location,
+          evento.start_date,
+          evento.duration_in_minutes,
+          evento.price,
+          evento.enabled_for_enrollment,
+          evento.max_assistance
+        ];
+        const result = await this.DBClient.query(sql, values);
+    
+          if (result.rowsAffected.length > 0) {
+            returnEntity = result.rowsAffected[0];
+          }
+        } catch (error) {
+          console.log(error);
+        }
+        return returnEntity;
+      }  
+
+      async deleteEvent(idEvento) {
+        var returnEntity = null;
+        try {
+          const sql = `DELETE FROM events WHERE id = $1`;
+          const values = [idEvento];
           const result = await this.DBClient.query(sql, values);
     
           if (result.rowsAffected.length > 0) {
@@ -294,25 +348,7 @@ export default class eventRepository
         return returnEntity;
       } 
 
-      async InscripcionEvento(evento, users) { //terminar
-        var returnEntity = null
-        try {
-          var sql = ""
-          if (evento.enabled_for_enrollment) {
-            sql = `Insert INTO event_enrollment (id_event, id_user, description, registration_date_time,attended,observations,rating) VALUES ($1,$2,$3,$4,$5,$6,$7)`;
-          }else return returnEntity;
-    
-          const values = [evento.id, users.id,enrollment.description, Date.now(),enrollment.attended, enrollment.observations, enrollment.rating]
-          const result = await this.DBClient.query(sql, values);
-    
-          if (result.rowsAffected.length > 0) {
-            returnEntity = result.rowsAffected[0];
-          }
-        } catch (error) {
-          console.log(error);
-        }
-        return returnEntity
-      }
+
     
 
 }

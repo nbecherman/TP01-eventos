@@ -29,6 +29,12 @@ export default class eventService {
     return getEventDetail;
   }
 
+  async getEventId(id) 
+  {
+    const getEventId = await EventRepository.getEventId(id);
+    return getEventId;
+  }
+
 
   async getAllParticipantes(id,name,username, first_name, last_name, attended, rating)
   {
@@ -43,22 +49,24 @@ export default class eventService {
     return "Insertado";
   }
   
-  async updateEvent(id, eventoActualizado)
+  async updateEvent(evento)
   {
-    await EventRepository.updateEvent(id, eventoActualizado);
+    await EventRepository.updateEvent(evento);
     return "Actualizado";
   }
   
+    
+  async deleteEvent(idEvento) {
+
+    await EventRepository.deleteEvent(idEvento);
+    return "Eliminado";
+  }
+
   async CambiarRating(idEvento, rating) {
     await EventRepository.UpdateRating(idEvento, rating)
     return "rating actualizado";
   }
-  
-  async InsertEvento(evento) {
 
-    await EventRepository.InscripcionEvento(evento);
-    return "insertado con exito";
-  }
 
   }
 

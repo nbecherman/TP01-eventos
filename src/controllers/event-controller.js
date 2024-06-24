@@ -77,7 +77,7 @@
     });
 
     
-    router.post("/",authMiddleware,async(request, response) => {  //casi terminado
+    router.post("/",authMiddleware,async(request, response) => {  // terminado (:
       const Evento = {};
       Evento.name = request.body.name;
       Evento.description = request.body.description;
@@ -92,7 +92,7 @@
 
       try {
 
-        var eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location) //arreglar esto
+        var eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location) 
 
         if (Evento.name && Evento.description && Evento.id_event_category && Evento.id_event_location && Evento.start_date && Evento.duration_in_minutes && Evento.price && Evento.enabled_for_enrollment && Evento.max_assistance && Evento.id_creator_user) 
         {
@@ -130,7 +130,7 @@
       }
   });
 
-  router.put("/",authMiddleware,async(request, response) => {  //casi terminado
+  router.put("/",authMiddleware,async(request, response) => {  //terminado (: revisar lo de id
     const Evento = {};
     Evento.name = request.body.name;
     Evento.description = request.body.description;
@@ -142,14 +142,12 @@
     Evento.enabled_for_enrollment = request.body.enabled_for_enrollment;
     Evento.max_assistance = request.body.max_assistance;
     Evento.id = request.body.id; 
-
     try {
 
-      var eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location) //arreglar esto
-      var idevento = await EventService.getEventDetail(Evento.id) //arreglar esto
-
-      if (idevento.id) {
-      if (Evento.name && Evento.description && Evento.id_event_category && Evento.id_event_location && Evento.start_date && Evento.duration_in_minutes && Evento.price && Evento.enabled_for_enrollment && Evento.max_assistance && Evento.id_creator_user) 
+      var eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location) 
+      var idevento = await EventService.getEventId(Evento.id) 
+    if (idevento.id!=null) {
+      if (Evento.name && Evento.description && Evento.id_event_category && Evento.id_event_location && Evento.start_date && Evento.duration_in_minutes && Evento.price && Evento.enabled_for_enrollment && Evento.max_assistance ) 
       {
         if (eventolocacion.max_capacity > Evento.max_assistance)
         {
@@ -157,7 +155,7 @@
           {
             if  (Evento.price > 0 && Evento.duration_in_minutes > 0) 
             {
-              const eventoCreado = await EventService.createEvent(Evento);
+              const eventoCreado = await EventService.updateEvent(Evento);
               return response.status(201).json(eventoCreado);
             } 
             else
@@ -189,6 +187,28 @@
     return response.json("Un Error");
     }
 });
+
+router.delete("/:id",authMiddleware,async(request, response) => { //termina (:
+  const idEvento =  request.params.id; 
+  var ideve = await EventService.getEventId(idEvento) 
+  try 
+  {
+  if (ideve.id) {
+      const eliminar = await EventService.deleteEvent(idEvento);
+      return response.status(200).json(eliminar);
+    } 
+    else
+    {
+    return response.status(400).json("No existe la id");
+    }
+  }
+    catch (error) {
+      console.log(error);
+      return res.json(error);
+    }
+  });
+
+
   router.post("/:id/enrollment",async(request, response) => {
 
     const idEvento = request.query.idEvento; 
@@ -206,8 +226,7 @@
   });
 
   router.patch("/:id/enrollment", async(request, response) => {
-    const idEvento = request.params.idEvento;
-    const rating = request.query.rating;
+ const id = request.body.params
     try {
       const cambiar = await EventService.CambiarRating(idEvento, rating);
       return res.json(cambiar);
