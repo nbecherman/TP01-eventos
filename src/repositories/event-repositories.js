@@ -148,7 +148,7 @@ export default class eventRepository
       } catch (error) {
           console.error("Error en la consulta:", error);
       }
-  }
+    }
   
       
     async getEventDetail(id) {
@@ -168,11 +168,12 @@ export default class eventRepository
       }
 
       async getEventId(id) {
-        const query = "SELECT * FROM events WHERE id = $1";
+         const query = "SELECT * FROM events WHERE id = $1";
          let returnEntity = null;
          try {
            const values = [id];
            const result = await this.DBClient.query(query, values);
+           console.log(result.rows.length)
            if (result.rows.length > 0) {
              returnEntity = result.rows[0];
            }
@@ -277,44 +278,60 @@ export default class eventRepository
         return returnEntity;
       }  
 
-      async updateEvent(evento) { ////////////////
-        var returnEntity = null;
-        try {
-          const sql = `
-          UPDATE events
-          SET name = $2,
-              description = $3,
-              id_event_category = $4,
-              id_event_location = $5,
-              start_date = $6,
-              duration_in_minutes = $7,
-              price = $8,
-              enabled_for_enrollment = $9,
-              max_assistance = $10
-          WHERE id = $1
-        `;
-        const values = [
-          evento.id,
-          evento.name,
-          evento.description,
-          evento.id_event_category,
-          evento.id_event_location,
-          evento.start_date,
-          evento.duration_in_minutes,
-          evento.price,
-          evento.enabled_for_enrollment,
-          evento.max_assistance
-        ];
-        const result = await this.DBClient.query(sql, values);
-    
-          if (result.rowsAffected.length > 0) {
-            returnEntity = result.rowsAffected[0];
-          }
-        } catch (error) {
-          console.log(error);
+async updateEvent(evento) {
+    let returnEntity = null;
+    let query = ''; // Definimos la variable `query` aquí para evitar el error de referencia
+
+        query = `
+            UPDATE events
+            SET `;
+        
+        const values = []; // Definimos `values` para almacenar los valores de los parámetros
+
+        const conditions = [];
+
+        if (evento.name) {
+            conditions.push(`name = $${values.length + 1}`);
+            values.push(evento.name);
         }
-        return returnEntity;
-      }  
+        if (evento.description) {
+            conditions.push(`description = $${values.length + 1}`);
+            values.push(evento.description);
+        }
+        if (evento.duration_in_minutes) {
+            conditions.push(`duration_in_minutes = $${values.length + 1}`);
+            values.push(evento.duration_in_minutes);
+        }
+        if (evento.price) {
+            conditions.push(`price = $${values.length + 1}`);
+            values.push(evento.price);
+        }
+        if (evento.max_assistance) {
+            conditions.push(`max_assistance = $${values.length + 1}`);
+            values.push(evento.max_assistance);
+        }
+
+        if (conditions.length > 0) {
+            query += conditions.join(", ");
+            query += ` WHERE id = $${values.length + 1}`; // Añade el campo ID para la cláusula WHERE
+            values.push(evento.id);
+        }
+        try {
+              const result = await this.DBClient.query(query, values);
+              if (result.rows.length > 0) {
+                  returnEntity = result.rows;
+              }
+          } catch (error) {
+              console.error("Error executing query:", error);
+          }
+          
+
+    console.log("Query:", query);
+    console.log("Values:", values);
+    console.log("Result:", returnEntity);
+    return returnEntity;
+
+}
 
       async deleteEvent(idEvento) {
         var returnEntity = null;

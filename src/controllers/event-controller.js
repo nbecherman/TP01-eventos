@@ -143,46 +143,53 @@
     Evento.max_assistance = request.body.max_assistance;
     Evento.id = request.body.id; 
     try {
-
-      var eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location) 
-      var idevento = await EventService.getEventId(Evento.id) 
-    if (idevento.id!=null) {
-      if (Evento.name && Evento.description && Evento.id_event_category && Evento.id_event_location && Evento.start_date && Evento.duration_in_minutes && Evento.price && Evento.enabled_for_enrollment && Evento.max_assistance ) 
-      {
-        if (eventolocacion.max_capacity > Evento.max_assistance)
+      if (!Evento.id) {
+        return response.status(400).send("ID del evento no proporcionado o es inválido");
+      }
+      const idevento = await EventService.getEventId(Evento.id);
+      if (!idevento) {
+          return response.status(404).send("No existe el evento con el ID proporcionado");
+      }
+     
+      if(Evento.id_event_location && Evento.max_assistance )
         {
-           if(Evento.name.length >3 && Evento.description.length >3) 
+          const eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location);
+          if(eventolocacion.max_capacity > Evento.max_assistance) //arreglar esto
+            {
+              return response.status(400).send("La asistencia es mayor a la capacidad")
+            }
+        }
+        
+      if (Evento.name) {
+          if(Evento.name.length<3) 
+            { 
+              return response.status(400).send("el nombre tiene menos de 3 caracteres ")
+            }
+      }
+      if (Evento.description) {
+        if(Evento.description.length <3) 
           {
-            if  (Evento.price > 0 && Evento.duration_in_minutes > 0) 
+            return response.status(400).send("La descripcion tiene menos de 3 caracteres ")
+          }
+        }
+        if (Evento.duration_in_minutes) {
+          if(Evento.description.lengt<0) 
             {
-              const eventoCreado = await EventService.updateEvent(Evento);
-              return response.status(201).json(eventoCreado);
-            } 
-            else
-            {
-              return response.status(400).send("el precio y/o la duracion es menor a 0 ")
+              return response.status(400).send("La duracion es menor a 0 ")
             }
           }
-          else
-          {
-            return response.status(400).send("el nombre y/o descripcion tiene menos de 3 caracteres ")
-          }
-        }
-        else
-        {
-          return response.status(400).send("La asistencia es mayor a la capacidad")
-        }
+          if (Evento.precio) {
+            if(Evento.precio<0) 
+              {
+                return response.status(400).send("El precio es menor a 0 ")
+              }
+            }
+            const eventoActualizado = await EventService.updateEvent(Evento);
+            return response.status(201).json(eventoActualizado);
       }
-      else
-      {
-        return response.status(400).send("Error en el tipo de dato o faltan")
-      }
-    }
-    else
-    {
-      return response.status(400).send("No existe el id del evento")
-    }
-    } catch (error) {
+  
+
+    catch (error) {
     console.error("Error al crear una nuevo evento:", error);
     return response.json("Un Error");
     }

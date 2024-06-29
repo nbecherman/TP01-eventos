@@ -27,8 +27,15 @@ export default class userRepository
     async registrarse(first_name,last_name,username,password){
         let returnEnity=null;
         try{
-            const sql="INSERT INTO users(first_name,last_name,username,password) VALUES($1,$2,$3,$4)";
-            const values=[first_name,last_name,username,password];
+            const getLastIdSql = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
+            const lastIdResult = await this.DBClient.query(getLastIdSql);
+            let newId = 1; // Valor inicial para el primer registro
+
+            if (lastIdResult.rows.length > 0) {
+                newId = lastIdResult.rows[0].id + 1; // Incrementa el último ID en 1
+            }
+            const sql="INSERT INTO users(id,first_name,last_name,username,password) VALUES($1,$2,$3,$4,$5)";
+            const values=[newId,first_name,last_name,username,password];
             const result=await this.DBClient.query(sql,values);
             if(result.rows.length>0){
                 returnEnity=result.rows[0];
