@@ -365,8 +365,39 @@ async updateEvent(evento) {
         return returnEntity;
       } 
 
+      async getTagsByEvent(id){
+        var returnEntity=null
+        try{
+        const sql="SELECT * FROM event_tags WHERE id_event=$1"
+        const values=[id]
+        const result= await this.DBClient.query(sql,values)
+        if (result.rows.length>0) {
+          returnEntity=result.rows;
+          
+        }
+        }catch(error){
+          console.log(error);
+        }
+        return returnEntity;
+        
+      }
 
-    
+      async getEnrrolmentsById(id){
+        var returnEntity=null
+        try{
+        const sql="SELECT * FROM event_enrrolments WHERE id_event=$1"
+        const values=[id]
+        const result= await this.DBClient.query(sql,values)
+        if (result.rows.length>0) {
+          returnEntity=result.rows;
+          
+        }
+        }catch(error){
+          console.log(error);
+        }
+        return returnEntity;
+        
+      }
 
 }
 

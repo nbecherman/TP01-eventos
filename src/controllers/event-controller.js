@@ -195,53 +195,68 @@
     }
 });
 
-router.delete("/:id",authMiddleware,async(request, response) => { //termina (:
-  const idEvento =  request.params.id; 
-  var ideve = await EventService.getEventId(idEvento) 
-  try 
-  {
-  if (ideve.id) {
-      const eliminar = await EventService.deleteEvent(idEvento);
-      return response.status(200).json(eliminar);
-    } 
-    else
+  router.delete("/:id",authMiddleware,async(request, response) => { //termina (:
+    const idEvento =  request.params.id; 
+    var ideve = await EventService.getEventId(idEvento) 
+    var tags = await EventService.getTagsByEvent(idEvento)
+    var enrrollments = await EventService.getEnrrolmentsById(idEvento)
+    try 
     {
-    return response.status(400).json("No existe la id");
+    if (ideve.id) {
+      if (tags==null) {
+        if (enrrollments==null) {
+          const eliminar = await EventService.deleteEvent(idEvento);
+          return response.status(200).json(eliminar); 
+        }
+        else
+        {
+          return response.status(400).json("Tiene enrrolments");
+        }
+      }
+      else
+      {
+        return response.status(400).json("Tiene tags");
+
+      }
+      } 
+      else
+      {
+      return response.status(400).json("No existe la id");
+      }
     }
-  }
-    catch (error) {
-      console.log(error);
-      return res.json(error);
-    }
-  });
+      catch (error) {
+        console.log(error);
+        return response.json(error);
+      }
+    });
 
 
-  router.post("/:id/enrollment",async(request, response) => {
+    router.post("/:id/enrollment",async(request, response) => {
 
-    const idEvento = request.query.idEvento; 
-    const attended = request.query.attended; 
-    const rating = request.query.rating; 
-    const descripcion = request.query.descripcion; 
-    const observations = request.query.observations;
-    try {
-      const inscripcion = await EventService.InscripcionEvento(idEvento,attended,rating,descripcion,observations);
-      return res.json(inscripcion);
-    } catch (error) {
-      console.log(error);
-      return res.json(error);
-    }
-  });
+      const idEvento = request.query.idEvento; 
+      const attended = request.query.attended; 
+      const rating = request.query.rating; 
+      const descripcion = request.query.descripcion; 
+      const observations = request.query.observations;
+      try {
+        const inscripcion = await EventService.InscripcionEvento(idEvento,attended,rating,descripcion,observations);
+        return res.json(inscripcion);
+      } catch (error) {
+        console.log(error);
+        return res.json(error);
+      }
+    });
 
-  router.patch("/:id/enrollment", async(request, response) => {
- const id = request.body.params
-    try {
-      const cambiar = await EventService.CambiarRating(idEvento, rating);
-      return res.json(cambiar);
-    } catch (error) {
-      console.log(error);
-      return res.json(error);
-    }
-  });
+    router.patch("/:id/enrollment", async(request, response) => {
+  const id = request.body.params
+      try {
+        const cambiar = await EventService.CambiarRating(idEvento, rating);
+        return res.json(cambiar);
+      } catch (error) {
+        console.log(error);
+        return res.json(error);
+      }
+    });
 
 
 

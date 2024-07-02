@@ -67,7 +67,13 @@ export default class eventService {
     return "rating actualizado";
   }
 
-
+    async getTagsByEvent(idEvento){
+      return EventRepository.getTagsByEvent(idEvento);
+    }
+    
+    async getEnrrolmentsById(idEvento){
+      return EventRepository.getEnrrolmentsById(idEvento);
+    }
   }
 
 
