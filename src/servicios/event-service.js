@@ -36,9 +36,9 @@ export default class eventService {
   }
 
 
-  async getAllParticipantes(id,name,username, first_name, last_name, attended, rating)
+  async getAllParticipantes(Evento_Enrrolment)
   {
-    const getAllParticipantes = await EventRepository.getAllParticipantes(id,name,username, first_name, last_name, attended, rating);
+    const getAllParticipantes = await EventRepository.getAllParticipantes(Evento_Enrrolment);
     console.log(getAllParticipantes)
     return getAllParticipantes;
   }
@@ -62,10 +62,7 @@ export default class eventService {
     return "Eliminado";
   }
 
-  async CambiarRating(idEvento, rating) {
-    await EventRepository.UpdateRating(idEvento, rating)
-    return "rating actualizado";
-  }
+
 
     async getTagsByEvent(idEvento){
       return EventRepository.getTagsByEvent(idEvento);
@@ -73,6 +70,28 @@ export default class eventService {
     
     async getEnrrolmentsById(idEvento){
       return EventRepository.getEnrrolmentsById(idEvento);
+    }
+
+    async getInscriptosAlEvento(idEvento)
+    {
+      return EventRepository.getInscriptosAlEvento(idEvento)
+    }
+
+    async isUserRegistered(idEvento,idUser)
+    {
+      return EventRepository.isUserRegistered(idEvento,idUser)
+    }
+
+    async InscripcionEvento(event_enrollment)
+    {
+      await EventRepository.InscripcionEvento(event_enrollment)
+      return "inscripto";
+
+    }
+
+    async CambiarRating(idEvento, rating) {
+      await EventRepository.UpdateRating(idEvento, rating)
+      return "rating actualizado";
     }
   }
 

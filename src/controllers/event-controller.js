@@ -56,28 +56,27 @@
 
 
 
-    router.get("/:id/enrollment", async(request,response) =>{ //terminado (:
-
-      const id = request.params.id; 
-      const name = request.query.name; 
-      const username = request.query.username; 
-      const first_name = request.query.first_name; 
-      const last_name = request.query.last_name; 
-      const attended = request.query.attended;
-      const rating = request.query.rating; 
+    router.get("/:id/enrollment", async(request,response) =>{ //postman
+      const Evento_Enrrolment = {};
+      Evento_Enrrolment.id = request.params.id; 
+      Evento_Enrrolment.first_name = request.query.first_name; 
+      Evento_Enrrolment.last_name = request.query.last_name; 
+      Evento_Enrrolment.username = request.query.username; 
+      Evento_Enrrolment.attended = request.query.attended;
+      Evento_Enrrolment.rating = request.query.rating; 
         try {
-          const allParticipantes = await EventService.getAllParticipantes(id,name,username, first_name, last_name, attended, rating);
+          const allParticipantes = await EventService.getAllParticipantes(Evento_Enrrolment);
           console.log(allParticipantes)
-          return res.status(200).json(allParticipantes);
+          return response.status(200).json(allParticipantes);
         } catch (error) {
           console.error("Un Error en el controller", error);
           return response.json("Un Error");
-        
+    
       } 
     });
 
     
-    router.post("/",authMiddleware,async(request, response) => {  // terminado (:
+    router.post("/",authMiddleware,async(request, response) => {  // postman (:
       const Evento = {};
       Evento.name = request.body.name;
       Evento.description = request.body.description;
@@ -130,7 +129,7 @@
       }
   });
 
-  router.put("/",authMiddleware,async(request, response) => {  //terminado (: revisar lo de id
+  router.put("/",authMiddleware,async(request, response) => {  //postman
     const Evento = {};
     Evento.name = request.body.name;
     Evento.description = request.body.description;
@@ -195,7 +194,7 @@
     }
 });
 
-  router.delete("/:id",authMiddleware,async(request, response) => { //termina (:
+  router.delete("/:id",authMiddleware,async(request, response) => { //postman (:
     const idEvento =  request.params.id; 
     var ideve = await EventService.getEventId(idEvento) 
     var tags = await EventService.getTagsByEvent(idEvento)
@@ -231,19 +230,52 @@
     });
 
 
-    router.post("/:id/enrollment",async(request, response) => {
+    router.post("/:id/enrollment",authMiddleware,async(request, response) => {
 
-      const idEvento = request.query.idEvento; 
-      const attended = request.query.attended; 
-      const rating = request.query.rating; 
-      const descripcion = request.query.descripcion; 
-      const observations = request.query.observations;
+      const event_enrollment = {};
+       event_enrollment.idEvento = request.params.id; 
+       event_enrollment.id_user = request.user.id;  
+       event_enrollment.description = request.body.description;  
+       event_enrollment.registration_date_time = new Date().toISOString();
+       event_enrollment.attended = request.body.attended;  
+       event_enrollment.observations = request.body.observations;  
+       event_enrollment.rating = request.body.rating;  
+
+       const event = await EventService.getEventId(event_enrollment.idEvento);
+       const inscriptos = await EventService.getInscriptosAlEvento(event_enrollment.idEvento);
+       console.log(inscriptos);
+
       try {
-        const inscripcion = await EventService.InscripcionEvento(idEvento,attended,rating,descripcion,observations);
-        return res.json(inscripcion);
+        if (!event) {
+          return response.status(404).json("El evento no existe.");
+        }
+      
+        const registrado = await EventService.isUserRegistered(event_enrollment.idEvento, event_enrollment.id_user);
+        console.log(registrado);
+        if (registrado) {
+            return response.status(400).json("El usuario ya está registrado en el evento.");
+        }
+       
+        if (!event.enabled_for_enrollment) {
+          return response.status(400).json("El evento no está habilitado para la inscripción.");
+          }
+
+          const date = new Date();
+          const dateEvento = new Date(event.start_date);
+          if (date <= dateEvento) {
+              return response.status(400).json("El evento ya ha sucedido o está programado para hoy.");
+          }
+
+
+          if (event.max_assistance <= inscriptos ) {
+              return response.status(400).json("Se ha excedido la capacidad máxima de registrados.");
+          }
+
+        const inscripcion = await EventService.InscripcionEvento(event_enrollment);
+        return response.json(inscripcion);
       } catch (error) {
         console.log(error);
-        return res.json(error);
+        return response.json(error);
       }
     });
 

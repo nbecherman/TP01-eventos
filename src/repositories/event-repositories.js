@@ -184,7 +184,7 @@ export default class eventRepository
          return returnEntity;
        }
 
-      async getAllParticipantes(id, name, username, first_name, last_name, attended, rating) {
+      async getAllParticipantes(Evento_Enrrolment) {
         let returnEntity = null;
         let query = `
             SELECT 
@@ -214,29 +214,29 @@ export default class eventRepository
         `;
     
         const conditions = [];
-        const values = [id];
+        const values = [Evento_Enrrolment.id];
     
-        if (name) {
+        if (Evento_Enrrolment.name) {
             conditions.push(`e.name = $${values.length + 1}`);
-            values.push(name);
+            values.push(Evento_Enrrolment.name);
         }
-        if (first_name) {
+        if (Evento_Enrrolment.first_name) {
             conditions.push(`u.first_name = $${values.length + 1}`);
-            values.push(first_name);
+            values.push(Evento_Enrrolment.first_name);
         }
-        if (last_name) {
+        if (Evento_Enrrolment.last_name) {
             conditions.push(`u.last_name = $${values.length + 1}`);
-            values.push(last_name);
+            values.push(Evento_Enrrolment.last_name);
         }
-        if (username) {
+        if (Evento_Enrrolment.username) {
             conditions.push(`u.username = $${values.length + 1}`);
-            values.push(username);
+            values.push(Evento_Enrrolment.username);
         }
-        if (attended !== undefined) {
+        if (Evento_Enrrolment.attended) {
             conditions.push(`er.attended = $${values.length + 1}`);
-            values.push(attended);
+            values.push(Evento_Enrrolment.attended);
         }
-        if (rating !== undefined) {
+        if (Evento_Enrrolment.rating) {
             conditions.push(`er.rating = $${values.length + 1}`);
             values.push(rating);
         }
@@ -399,6 +399,56 @@ async updateEvent(evento) {
         
       }
 
+      async getInscriptosAlEvento(id)
+      {
+      var returnEntity=null
+      try{
+      const sql="SELECT id_event, COUNT(id_user) AS num_users FROM event_enrollments WHERE id_event = $1 GROUP BY id_event;"
+      const values=[id]
+      const result= await this.DBClient.query(sql,values)
+      if (result.rows.length>0) {
+        returnEntity=result.rows;
+      }
+      }catch(error){
+        console.log(error);
+      }
+      return returnEntity;
+       
+      }
+
+      async isUserRegistered(idEvento,idUser)
+      {
+      var returnEntity=null
+      try{
+      const sql = "SELECT COUNT(*) > 0 AS exists FROM event_enrollments WHERE id_user = $2 AND id_event = $1";
+      const values=[idEvento,idUser]
+      const result= await this.DBClient.query(sql,values)
+      if (result.rows.length > 0) {
+        returnEntity = result.rows[0].exists;
+      }
+      }catch(error){
+        console.log(error);
+      }
+      return returnEntity;
+       
+      }
+
+      async InscripcionEvento(event_enrollment)
+      {
+      var returnEntity=null
+      try{
+        const sql = `Insert into event_enrollments(id_event,id_user,description,registration_date_time,attended,observations,rating) values ($1,$2,$3,$4,$5,$6,$7)`;
+        const values=[event_enrollment.idEvento , event_enrollment.id_user, event_enrollment.description, event_enrollment.registration_date_time, event_enrollment.attended, event_enrollment.observations, event_enrollment.rating]
+        const result= await this.DBClient.query(sql,values)
+        if (result.rows.length>0) {
+          returnEntity=result.rows;
+        }
+        }catch(error){
+          console.log(error);
+        }
+        return returnEntity;
+       
+      }
 }
 
 
