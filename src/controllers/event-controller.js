@@ -198,7 +198,7 @@
     const idEvento =  request.params.id; 
     var ideve = await EventService.getEventId(idEvento) 
     var tags = await EventService.getTagsByEvent(idEvento)
-    var enrrollments = await EventService.getEnrrolmentsById(idEvento)
+    var enrrollments = await EventService.getEnrolmentsById(idEvento)
     try 
     {
     if (ideve.id) {
@@ -230,7 +230,7 @@
     });
 
 
-    router.post("/:id/enrollment",authMiddleware,async(request, response) => {
+    router.post("/:id/enrollment",authMiddleware,async(request, response) => { //postman
 
       const event_enrollment = {};
        event_enrollment.idEvento = request.params.id; 
@@ -247,28 +247,28 @@
 
       try {
         if (!event) {
-          return response.status(404).json("El evento no existe.");
+          return response.status(404).send("El evento no existe.");
         }
       
         const registrado = await EventService.isUserRegistered(event_enrollment.idEvento, event_enrollment.id_user);
         console.log(registrado);
         if (registrado) {
-            return response.status(400).json("El usuario ya está registrado en el evento.");
+            return response.status(400).send("El usuario ya está registrado en el evento.");
         }
        
         if (!event.enabled_for_enrollment) {
-          return response.status(400).json("El evento no está habilitado para la inscripción.");
+          return response.status(400).send("El evento no está habilitado para la inscripción.");
           }
 
           const date = new Date();
           const dateEvento = new Date(event.start_date);
           if (date <= dateEvento) {
-              return response.status(400).json("El evento ya ha sucedido o está programado para hoy.");
+              return response.status(400).send("El evento ya ha sucedido o está programado para hoy.");
           }
 
 
           if (event.max_assistance <= inscriptos ) {
-              return response.status(400).json("Se ha excedido la capacidad máxima de registrados.");
+              return response.status(400).send("Se ha excedido la capacidad máxima de registrados.");
           }
 
         const inscripcion = await EventService.InscripcionEvento(event_enrollment);
@@ -279,18 +279,45 @@
       }
     });
 
-    router.patch("/:id/enrollment", async(request, response) => {
-  const id = request.body.params
+    router.delete("/:id/enrollment", authMiddleware , async (request, response) => {
+      const id = request.params.id;
+      const id_user = request.user.id;  
       try {
-        const cambiar = await EventService.CambiarRating(idEvento, rating);
-        return res.json(cambiar);
+        if (!id) {
+          return response.status(400).send("ID del evento no proporcionado o es inválido");
+        }
+        const idevento = await EventService.getEventId(id);
+        if (!idevento) {
+            return response.status(404).send("No existe el evento con el ID proporcionado");
+        }
+        const eliminarEvento =await EventService.eliminarInscripcion(id,id_user)
+        console.log(eliminarEvento + "wwww")
+        if (eliminarEvento == true) {
+          return response.status(201).send("Eliminado");
+        }
+        else
+        {
+          return response.status(404).send("No estas registrado al evento");
+        }
       } catch (error) {
         console.log(error);
-        return res.json(error);
+        return response.json(error);
       }
     });
 
 
+    router.patch("/:id/enrollment", async(request, response) => {
+          const id = request.body.params
+          try {
+            const cambiar = await EventService.CambiarRating(idEvento, rating);
+            return res.json(cambiar);
+          } catch (error) {
+            console.log(error);
+            return res.json(error);
+          }
+        });
 
+ 
 
+        
 export default router;

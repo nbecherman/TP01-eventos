@@ -382,7 +382,7 @@ async updateEvent(evento) {
         
       }
 
-      async getEnrrolmentsById(id){
+      async getEnrolmentsById(id){
         var returnEntity=null
         try{
         const sql="SELECT * FROM event_enrrolments WHERE id_event=$1"
@@ -449,7 +449,24 @@ async updateEvent(evento) {
         return returnEntity;
        
       }
-}
+
+      async eliminarInscripcion(id,id_user) {
+        var returnEntity=true
+        try {
+            const sql = "DELETE FROM event_enrollments WHERE id_event = $1 AND id_user = $2";
+            const values = [id, id_user]; 
+            const result = await this.DBClient.query(sql, values);
+            console.log(result);
+            if (result.rowCount==0) {
+            returnEntity=false
+            }
+            console.log(returnEntity + "zsel");
+          } catch (error) {
+            console.log(error);
+          }
+          return returnEntity;
+        }  
+      }
 
 
 

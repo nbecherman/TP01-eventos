@@ -68,8 +68,8 @@ export default class eventService {
       return EventRepository.getTagsByEvent(idEvento);
     }
     
-    async getEnrrolmentsById(idEvento){
-      return EventRepository.getEnrrolmentsById(idEvento);
+    async getEnrolmentsById(idEvento){
+      return EventRepository.getEnrolmentsById(idEvento);
     }
 
     async getInscriptosAlEvento(idEvento)
@@ -93,6 +93,13 @@ export default class eventService {
       await EventRepository.UpdateRating(idEvento, rating)
       return "rating actualizado";
     }
+
+
+    async eliminarInscripcion(id,id_user) {
+      return EventRepository.eliminarInscripcion(id,id_user)
+    }
+
+    
   }
 
 
