@@ -3,8 +3,7 @@
   import locationService from "../servicios/location-service.js";
 
   import authMiddleware from "../auth/authMiddleware.js";
-  import Evento from "../entities/Evento.js";
-  import EventLocation from "../entities/EventLoc.js";
+
 
 
   const EventService = new eventService();
@@ -23,7 +22,6 @@
   
       try {
           const filter = await EventService.getEventByFilter(Evento, limit, offset);
-          console.log("entre")
           return response.json(filter);
       } catch (error) {
           console.error("Un Error en el controller", error);
@@ -39,11 +37,11 @@
         try {
           const allEvents = await EventService.getEventDetail(id);
           if (allEvents) {
-            return res.status(200).json(allEvents);
+            return response.status(200).json(allEvents);
           }
           else
           {
-            return res.status(404).send(); //inexistente
+            return res.status(404).send("no existe el evento"); 
           }
         } catch (error) {
           console.error("Un Error en el controller", error);
@@ -76,7 +74,7 @@
     });
 
     
-    router.post("/",authMiddleware,async(request, response) => {  // postman (:
+    router.post("/",authMiddleware,async(request, response) => {  // postman 
       const Evento = {};
       Evento.name = request.body.name;
       Evento.description = request.body.description;
@@ -87,7 +85,7 @@
       Evento.price = request.body.price;
       Evento.enabled_for_enrollment = request.body.enabled_for_enrollment;
       Evento.max_assistance = request.body.max_assistance;
-      Evento.id_creator_user = request.user.id; //del auth
+      Evento.id_creator_user = request.user.id; 
 
       try {
 
@@ -153,7 +151,7 @@
       if(Evento.id_event_location && Evento.max_assistance )
         {
           const eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location);
-          if(eventolocacion.max_capacity > Evento.max_assistance) //arreglar esto
+          if(eventolocacion.max_capacity > Evento.max_assistance) 
             {
               return response.status(400).send("La asistencia es mayor a la capacidad")
             }
@@ -238,8 +236,7 @@
        event_enrollment.description = request.body.description;  
        event_enrollment.registration_date_time = new Date().toISOString();
        event_enrollment.attended = request.body.attended;  
-       event_enrollment.observations = request.body.observations;  
-       event_enrollment.rating = request.body.rating;  
+ 
 
        const event = await EventService.getEventId(event_enrollment.idEvento);
        const inscriptos = await EventService.getInscriptosAlEvento(event_enrollment.idEvento);
@@ -262,7 +259,7 @@
 
           const date = new Date();
           const dateEvento = new Date(event.start_date);
-          if (date <= dateEvento) {
+          if (date >= dateEvento) {
               return response.status(400).send("El evento ya ha sucedido o está programado para hoy.");
           }
 
@@ -279,7 +276,7 @@
       }
     });
 
-    router.delete("/:id/enrollment", authMiddleware , async (request, response) => {
+    router.delete("/:id/enrollment", authMiddleware , async (request, response) => { //postman
       const id = request.params.id;
       const id_user = request.user.id;  
       try {
@@ -291,13 +288,13 @@
             return response.status(404).send("No existe el evento con el ID proporcionado");
         }
         const eliminarEvento =await EventService.eliminarInscripcion(id,id_user)
-        console.log(eliminarEvento + "wwww")
+        
         if (eliminarEvento == true) {
           return response.status(201).send("Eliminado");
         }
         else
         {
-          return response.status(404).send("No estas registrado al evento");
+          return response.status(400).send("No estas registrado al evento");
         }
       } catch (error) {
         console.log(error);
@@ -306,14 +303,48 @@
     });
 
 
-    router.patch("/:id/enrollment", async(request, response) => {
-          const id = request.body.params
+    router.patch("/:id/enrollment/:rating",authMiddleware , async(request, response) => { //postman
+          const rating = request.params.rating;      
+          const observations = request.body.observations;            
+          const id_user = request.user.id;  
+          const id = request.params.id;
+          
           try {
-            const cambiar = await EventService.CambiarRating(idEvento, rating);
-            return res.json(cambiar);
-          } catch (error) {
+            if (!id) {
+              return response.status(401).send("ID del evento no es proporcionado o es inválido");
+            }
+
+            const idevento = await EventService.getEventId(id);
+            if (!idevento) {
+                return response.status(404).send("No existe el evento con el ID proporcionado");
+            }
+            if (rating < 1 || rating > 10) {
+              return response.status(400).send("Los valores del rating, no se encuentran entre 1 y 10");
+            }
+            
+            const event = await EventService.getEventId(id);
+            const date = new Date();
+            const dateEvento = new Date(event.start_date);
+
+
+            if (date >= dateEvento) {
+                return response.status(400).send("El evento ya ha sucedido o está programado para hoy.");
+            }
+
+
+            const patchEvento =await EventService.patchEvento(id,id_user,observations,rating)
+
+            if (patchEvento == true) {
+              return response.status(201).send("actualizado");
+            }
+            else
+            {
+              return response.status(404).send("No estas registrado al evento");
+            }
+          }
+          catch (error) {
             console.log(error);
-            return res.json(error);
+            return response.json(error);
           }
         });
 

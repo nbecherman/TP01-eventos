@@ -9,46 +9,122 @@ export default class provinceRepository
         this.DBClient.connect();
     }
 
-    async getAllProvincias(limit, offset) {
-        const sql = "SELECT * FROM provinces limit = $1 offset = $2";
-        const values = [limit, offset];
-        return await this.DBClient.query(sql, values);
+
+    async cantidadProvinciasPag() { 
+        try {
+          var sql = "SELECT COUNT(*) FROM provinces"
+          const result = await this.DBClient.query(sql)
+          return result.rows[0].count
+        } catch (error) {
+          return error;
+        }
+      }
+      async getProvincias(limit, offset){
+        let returnEnity=null;
+        try{
+            const sql="select * from provinces limit $1 offset $2";
+            const values = [limit, (offset*limit)]
+            const result=await this.DBClient.query(sql, values);
+            if(result.rows.length>0){
+                returnEnity=result.rows;
+            }
+        }catch(error){
+            console.log(error)
+        }
+        return returnEnity;
     }
+
+   
+        async getProvinciaDetail(id){
+            let returnEnity=null;
+            try{
+                const sql="select * from provinces where id=$1";
+                const values=[id];
+                const result=await this.DBClient.query(sql,values);
+                if(result.rows.length>0){
+                    returnEnity=result.rows[0];
+                }
+            }catch(error){
+                console.log(error)
+            }
+            return returnEnity;
+        }
+    
+
 
     async createProvincia(provincia) {
-        const sql = "INSERT INTO provinces (name, full_name, latitude, longitude, display_order) VALUES ($1, $2, $3, $4, $5)"; 
-        const values = [provincia.name, provincia.full_name, provincia.latitude, provincia.longitude, provincia.display_order];
-        const result = await this.DBClient.query(sql, values);
-        return result.rows;
-    }
-
-    async deleteProvincia(id) {
-        const sql = "DELETE FROM provinces WHERE id = $1";
-        const values = [id];
-        return await this.DBClient.query(sql,values);
-    }
-
-    async updateProvincia(id, provincia) {
-        const sql = "UPDATE provinces SET(name = $1, full_name = $2 , latitude = $3, longitude = $4, display_order = $5) WHERE id = $6";
-        const values = [provincia.name, provincia.full_name, provincia.latitude, provincia.longitude, provincia.display_order, id];
-        return await this.DBClient.query(sql,values);
-    }
-
-    async getProvinciaDetail(id){
-    let returnEntity = null;
-    try{
-        const sql = "SELECT * from provinces p WHERE p.id = $1"
-        const values = [id]
-        const result = await this.DBClient.query(sql, values); //result tiene dos variables. las rows- 03-08
-        if(result.row.lenght > 0)
-        {
-        returnEntity = result.rows[0];
+        try {
+            const sql = "INSERT INTO provinces (name, full_name, latitude, longitude, display_order) VALUES ($1, $2, $3, $4, null)"; 
+            const values = [provincia.name, provincia.full_name, provincia.latitude, provincia.longitude];
+            await this.DBClient.query(sql, values);
+        } catch (error) {
+          console.log(error);
         }
+      }  
+
+      async updateProvincia(provincia) {
+        let returnEntity = null;
+        let query = ''; 
+    
+            query = `
+                UPDATE provinces
+                SET `;
+            
+            const values = []; 
+    
+            const conditions = [];
+            if (provincia.name) {
+                conditions.push(`name = $${values.length + 1}`);
+                values.push(provincia.name);
+            }
+            if (provincia.full_name) {
+                conditions.push(`full_name = $${values.length + 1}`);
+                values.push(provincia.full_name);
+            }
+            if (provincia.latitude) {
+                conditions.push(`latitude = $${values.length + 1}`);
+                values.push(provincia.latitude);
+            }
+            if (provincia.longitude) {
+                conditions.push(`longitude = $${values.length + 1}`);
+                values.push(provincia.longitude);
+            }
+            if (conditions.length > 0) {
+                query += conditions.join(", ");
+                query += ` WHERE id = $${values.length + 1}`; 
+                values.push(provincia.id);
+            }
+            try {
+                  const result = await this.DBClient.query(query, values);
+                  if (result.rows.length > 0) {
+                      returnEntity = result.rows;
+                  }
+              } catch (error) {
+                  console.error("Error executing query:", error);
+              }
+              
+    
+        console.log("Query:", query);
+        console.log("Values:", values);
+        console.log("Result:", returnEntity);
+        return returnEntity;
+    
     }
-    catch(error)
-    {
-        console.log(error)
-    }
-    return returnEntity
-    }
+  
+    async deleteProvincia(id) {
+        var returnEntity=true
+        try {
+            const sql = `DELETE from provinces Where id=$1`;
+            const values = [id]; 
+            const result = await this.DBClient.query(sql, values);
+            if (result.rowCount==0) {
+            returnEntity=false
+            }
+          } catch (error) {
+            console.log(error);
+          }
+          return returnEntity;
+        }  
+
+  
 }

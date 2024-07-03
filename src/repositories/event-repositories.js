@@ -85,10 +85,10 @@ export default class eventRepository
     }
 
 
-    async cantidadEventosPag() { //revisar
+    async cantidadEventosPag() { 
       try {
         var sql = "SELECT COUNT(*) FROM events"
-        const result = await this.BDclient.query(sql)
+        const result = await this.DBClient.query(sql)
         return result.rows[0].count
       } catch (error) {
         return error;
@@ -280,13 +280,13 @@ export default class eventRepository
 
 async updateEvent(evento) {
     let returnEntity = null;
-    let query = ''; // Definimos la variable `query` aquí para evitar el error de referencia
+    let query = ''; 
 
         query = `
             UPDATE events
             SET `;
         
-        const values = []; // Definimos `values` para almacenar los valores de los parámetros
+        const values = []; 
 
         const conditions = [];
 
@@ -313,7 +313,7 @@ async updateEvent(evento) {
 
         if (conditions.length > 0) {
             query += conditions.join(", ");
-            query += ` WHERE id = $${values.length + 1}`; // Añade el campo ID para la cláusula WHERE
+            query += ` WHERE id = $${values.length + 1}`; 
             values.push(evento.id);
         }
         try {
@@ -437,8 +437,8 @@ async updateEvent(evento) {
       {
       var returnEntity=null
       try{
-        const sql = `Insert into event_enrollments(id_event,id_user,description,registration_date_time,attended,observations,rating) values ($1,$2,$3,$4,$5,$6,$7)`;
-        const values=[event_enrollment.idEvento , event_enrollment.id_user, event_enrollment.description, event_enrollment.registration_date_time, event_enrollment.attended, event_enrollment.observations, event_enrollment.rating]
+        const sql = `Insert into event_enrollments(id_event,id_user,description,registration_date_time,attended,observations,rating) values ($1,$2,$3,$4,$5,null,null)`;
+        const values=[event_enrollment.idEvento , event_enrollment.id_user, event_enrollment.description, event_enrollment.registration_date_time, event_enrollment.attended]
         const result= await this.DBClient.query(sql,values)
         if (result.rows.length>0) {
           returnEntity=result.rows;
@@ -456,16 +456,56 @@ async updateEvent(evento) {
             const sql = "DELETE FROM event_enrollments WHERE id_event = $1 AND id_user = $2";
             const values = [id, id_user]; 
             const result = await this.DBClient.query(sql, values);
-            console.log(result);
             if (result.rowCount==0) {
             returnEntity=false
             }
-            console.log(returnEntity + "zsel");
           } catch (error) {
             console.log(error);
           }
           return returnEntity;
         }  
+
+          async patchEvento(id,id_user,observations,rating) {
+            let returnEntity = true;
+            let query = ''; 
+        
+                query = `
+                    UPDATE event_enrollments
+                    SET `;
+                
+                const values = []; 
+                const conditions = [];
+        
+                if (observations) {
+                    conditions.push(`observations = $${values.length + 1}`);
+                    values.push(observations);
+                }
+                if (rating) {
+                    conditions.push(`rating = $${values.length + 1}`);
+                    values.push(rating);
+                }
+                
+                if (conditions.length > 0) {
+                    query += conditions.join(", ");
+                    query += ` WHERE id_event = $${values.length + 1} and id_user = $${values.length + 2}`; 
+                    values.push(id);
+                    values.push(id_user);
+
+                }
+                try {
+                      const result = await this.DBClient.query(query, values);
+                      if (result.rowCount==0) {
+                        returnEntity=false
+                        }
+                      } catch (error) {
+                        console.log(error);
+                      }
+        
+            console.log("Query:", query);
+            console.log("Values:", values);
+            console.log("Result:", returnEntity);
+            return returnEntity;
+        }
       }
 
 

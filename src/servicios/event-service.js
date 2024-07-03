@@ -99,7 +99,11 @@ export default class eventService {
       return EventRepository.eliminarInscripcion(id,id_user)
     }
 
-    
+
+    async patchEvento(id,id_user,observations,rating) {
+      return EventRepository.patchEvento(id,id_user,observations,rating)
+    }
+
   }
 
 
