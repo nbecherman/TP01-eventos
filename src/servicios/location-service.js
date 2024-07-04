@@ -4,7 +4,7 @@ const LocationRepository= new locationRepository();
 import { Pagination} from "../utils/Paginacion.js";
 const PaginacionConfig = new Pagination();
 
-export default class eventLocation
+export default class Location
 {
 async getEventLocationById(id) //sacar de aca
 {
