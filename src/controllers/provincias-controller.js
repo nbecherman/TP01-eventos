@@ -1,15 +1,17 @@
 import express from "express";
 import provinciaService from "../servicios/provinicias-service.js";
+import locationService from "../servicios/location-service.js";
 
 const router = express.Router();
 
 const ProvinciaService = new provinciaService();
+const LocationService = new locationService();
+
 
 
 router.get("/", async (request, response) => {
   const limit = request.query.limit || 10; // Valor por defecto - registros por pagina
   const offset = request.query.offset||0;  //empieza desde 0 - del 0-10. punto de inicio
-
   try {
       const provincias = await ProvinciaService.getAllProvincias(limit, offset);
       return response.json(provincias);
@@ -68,8 +70,6 @@ router.post("/",async (request, response) =>{
   Provincia.latitude=request.body.latitude
   Provincia.longitude=request.body.longitude
   let id = request.params.id;
-
-
   try {
     if(Provincia.name && Provincia.full_name&& Provincia.latitude && Provincia.longitude){
 
@@ -79,7 +79,7 @@ router.post("/",async (request, response) =>{
           const provincia = await ProvinciaService.createProvincia(Provincia);
           return response.status(201).json(provincia);
         }else{
-          return response.status(400).send("La provinicia tiene menos de letras");
+          return response.status(400).send("La provinicia tiene menos de 3 letras");
         }
       }else{
         return response.status(400).send("Latitude o longitud no son numeros");
@@ -141,13 +141,17 @@ router.put("/",async (request, response) =>{
   const id = request.params.id;
   try {
     const provinicia=await ProvinciaService.getProvinciaDetail(id)
+    const locations = await LocationService.getLocationByProvince(id);
     if(provinicia){
+      if(locations==null)
+      {        
         const eliminado=await ProvinciaService.deleteProvincia(id);
-        if (eliminado == true) {        
-          return response.status(200).send(eliminado);
-        }else{
-          return response.status(403).send("No se puede eliminar porque tiene localidades")
-        }
+        return response.status(200).send(eliminado);
+      }
+      else
+      {
+        return response.status(403).send("No se puede eliminar porque tiene localidades")
+      }
     }else{
       return response.status(404).send("No existe una provincia con esa id");
     }

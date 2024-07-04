@@ -13,6 +13,7 @@ const port = 3100;
 app.use("/event", EventController );
 app.use("/user", UserController );
 app.use("/provincias", ProvinciasController );  
+app.use("/location", LocationController );  
 app.use("/event-location", LocationController );  
 //app.use("/event-category", CategoryController );  
 

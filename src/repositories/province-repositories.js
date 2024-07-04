@@ -23,7 +23,7 @@ export default class provinceRepository
         let returnEnity=null;
         try{
             const sql="select * from provinces limit $1 offset $2";
-            const values = [limit, (offset*limit)]
+            const values = [limit,offset]
             const result=await this.DBClient.query(sql, values);
             if(result.rows.length>0){
                 returnEnity=result.rows;
@@ -110,21 +110,20 @@ export default class provinceRepository
         return returnEntity;
     
     }
-  
-    async deleteProvincia(id) {
-        var returnEntity=true
-        try {
-            const sql = `DELETE from provinces Where id=$1`;
-            const values = [id]; 
-            const result = await this.DBClient.query(sql, values);
-            if (result.rowCount==0) {
-            returnEntity=false
-            }
-          } catch (error) {
-            console.log(error);
-          }
-          return returnEntity;
-        }  
 
-  
+            async deleteProvincia(id) {
+                var returnEntity = null;
+                try {
+                  const sql = "DELETE FROM provinces WHERE id=$1";
+                  const values = [id];
+                  const result = await this.DBClient.query(sql, values);
+            
+                  if (result.rowsAffected.length > 0) {
+                    returnEntity = result.rowsAffected[0];
+                  }
+                } catch (error) {
+                  console.log(error);
+                }
+                return returnEntity;
+              }  
 }

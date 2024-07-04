@@ -40,7 +40,6 @@ export default class provinciaService {
             const getlocalidades = await LocationService.getLocalidadesByProvincia(id_provincia,parsedLimit, parsedOffset)
             const collection = {getlocalidades, paginacion}
             return collection;
-    
           }
 
           async createProvincia(nuevaProvincia)

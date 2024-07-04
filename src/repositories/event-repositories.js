@@ -456,6 +456,7 @@ async updateEvent(evento) {
             const sql = "DELETE FROM event_enrollments WHERE id_event = $1 AND id_user = $2";
             const values = [id, id_user]; 
             const result = await this.DBClient.query(sql, values);
+            console.log(result)
             if (result.rowCount==0) {
             returnEntity=false
             }
