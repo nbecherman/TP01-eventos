@@ -25,5 +25,14 @@ export default class categoryService {
           return "OK create" 
       }
 
+      async updateCategory(Categoria) {
+        return await CategoryRepository.updateCategory(Categoria);
+    }
+      
+    async deleteCategory(id) {
+      return await CategoryRepository.deleteCategory(id);
+  }
+    
+
 
 } 

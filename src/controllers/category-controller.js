@@ -55,29 +55,49 @@ router.get("/:id", async (request, response) => {
 });
 
 
-  router.patch("/", async (request, response) => {
+  router.put("/",async (request, response) =>{
     const categoria = {};
-    categoria.name = request.query.name;
-    categoria.display_order = request.query.display_order;
-    categoria.id = request.query.id;
-    if ((categoria.name != null || categoria.display_order || null) && categoria.id != null) {
-      try {
-        const respuesta = await categoriaSrv.updateCategoria(categoria)
-        return response.status(200).json(respuesta)
-      } catch (error) {
-        return response.status(400).json(error)
+    categoria.name = request.body.name;
+    categoria.display_order = request.body.display_order;
+    categoria.id = request.body.id;
+    try {
+      if (categoria.name) {
+        if(categoria.name == null){
+            return response.status(400).send("El name es null")
+        }
       }
-    } else response.status(404).json("datos mal")
+      if (categoria.name ) {
+        if (categoria.name.length < 3){
+            return response.status(400).send("El name tiene menos de 3 caracteres")
+        }
+      }  
+        const category = await categoriaSrv.updateCategory(categoria);
+        console.log(category)
+        if (category) {
+        return response.status(201).send("actualizado")
+        }
+         else
+        {
+         return response.status(404).send("No existe la id")
+        } 
+  
+    } catch (error) {
+      console.log(error);
+      return res.json(error);
+    }
   })
-
-
   router.delete("/:id", async (request,response) => {
     const id = request.params.id;
     try {
-        const respuesta = await categoriaSrv.deleteCategoria(id)
-        return response.status(200).json(respuesta)
-      } catch (error) {
+        const eliminado = await categoriaSrv.deleteCategory(id)
+        if (eliminado) {
+        return response.status(200).json("eliminado")
+        }
+        else
+        {
         return response.status(404).json("Id no encontrado");
+        }
+      } catch (error) {
       }
   })  
 

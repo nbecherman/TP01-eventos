@@ -96,8 +96,8 @@ export default class provinceRepository
             }
             try {
                   const result = await this.DBClient.query(query, values);
-                  if (result.rows.length > 0) {
-                      returnEntity = result.rows;
+                  if (result.rowCount > 0) {
+                      returnEntity = true;
                   }
               } catch (error) {
                   console.error("Error executing query:", error);

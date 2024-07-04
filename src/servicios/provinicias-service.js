@@ -49,10 +49,10 @@ export default class provinciaService {
           }
     
 
-            async updateProvincia(iprovinciaActualizada)
+            async updateProvincia(provinciaActualizada)
             {
-                  const updateProvincia = await ProvinceRepository.updateProvincia(iprovinciaActualizada);
-                  return "actualizado";
+              return await ProvinceRepository.updateProvincia(provinciaActualizada);
+                 
             }
 
           async deleteProvincia(id)

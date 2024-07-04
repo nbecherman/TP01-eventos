@@ -109,7 +109,7 @@ router.put("/",async (request, response) =>{
       } 
     }
     if (Provincia.longitude ) {
-      if(!isNaN(Provincia.longitude)){
+      if(!isNaN(Provincia.longitude)){ //revusar
       }else{
         return response.status(400).send("Longitud no es un numero");
       } 
@@ -125,7 +125,7 @@ router.put("/",async (request, response) =>{
       
       const provincia = await ProvinciaService.updateProvincia(Provincia);
       if (provincia) {
-      return response.status(201).json(provincia)
+      return response.status(201).send("actualiazo")
       }
        else
        {
@@ -133,7 +133,7 @@ router.put("/",async (request, response) =>{
 
   } catch (error) {
     console.log(error);
-    return res.json(error);
+    return response.json(error);
   }
 })
 

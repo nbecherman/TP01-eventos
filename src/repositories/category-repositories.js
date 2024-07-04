@@ -58,5 +58,60 @@ export default class categoryRepository
               console.log(error);
             }
           }  
+
+          async updateCategory(categoria) {
+            let returnEntity = null;
+            let query = ''; 
+        
+                query = `
+                    UPDATE event_categories
+                    SET `;
+                
+                const values = []; 
+                const conditions = [];
+                if (categoria.name) {
+                    conditions.push(`name = $${values.length + 1}`);
+                    values.push(categoria.name);
+                }
+                if (categoria.display_order) {
+                    conditions.push(`display_order = $${values.length + 1}`);
+                    values.push(categoria.display_order);
+                }
+                if (conditions.length > 0) {
+                    query += conditions.join(", ");
+                    query += ` WHERE id = $${values.length + 1}`; 
+                    values.push(categoria.id);
+                }else {
+                    console.error("No fields");
+                    return null; 
+                  }
+                try {
+                      const result = await this.DBClient.query(query, values);
+                      if (result.rowCount > 0) {
+                          returnEntity = true;
+                      }
+                  } catch (error) {
+                      console.error("Error executing query:", error);
+                  }
+            console.log("Query:", query);
+            console.log("Values:", values);
+            console.log("Result:", returnEntity);
+            return returnEntity;
+        }
+
+        async deleteCategory(id) {
+            var returnEntity = null;
+            try {
+              const sql = "DELETE FROM event_categories WHERE id=$1";
+              const values = [id];
+              const result = await this.DBClient.query(sql, values);
+              if (result.rowCount > 0) {
+                returnEntity = true;
+              }
+            } catch (error) {
+              console.log(error);
+            }
+            return returnEntity;
+          }  
     
 }
