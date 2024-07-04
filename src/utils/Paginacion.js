@@ -2,11 +2,11 @@ import "dotenv/config";
 
 const BASE_URL = process.env.BASE_URL;
 
-export class PaginationDto {
-  limit;
-  offset;
-  nextPage;
-  total;
+export class PaginationDto { //clasepag
+  limit;//limite de elementos por pag
+  offset;//indice de la pag actual
+  nextPage;//proxima pag
+  total; //el total de los elementos disponibles
 }
 
 export class Pagination {
