@@ -14,13 +14,9 @@ export default class eventService {
       const cantidad =  Number.parseInt(await EventRepository.cantidadEventosPag()); //cantidad de eventos
       const nextPage=((parsedOffset+1) * parsedLimit<=cantidad) ?`/event?${(Evento.name) ?`&name=${Evento.name}`:''}${(Evento.category) ?`&category=${Evento.category}` : ''}${(Evento.startDate) ?`&startDate=${Evento.startDate}`:''}${(Evento.tag) ?`&tag=${Evento.tag}`:''}`:"null"
       const paginacion = PaginacionConfig.buildPaginationDto(parsedLimit, parsedOffset, cantidad, nextPage)
-      const eventosPorFiltro = await EventRepository.getEventByFilter(Evento, parsedLimit, parsedOffset)
-      if (eventosPorFiltro!=null) {
-        const collection = {eventosPorFiltro, paginacion}
-        return collection;
-      }else{
-        return {eventosPorFiltro}
-      }  
+      const collection = await EventRepository.getEventByFilter(Evento, parsedLimit, parsedOffset)
+      const collection2 = {collection, paginacion} //arreglado
+      return collection2; 
     }
   
   async getEventDetail(id) 

@@ -15,13 +15,9 @@ export default class provinciaService {
             const cantidad =  Number.parseInt(await ProvinceRepository.cantidadProvinciasPag()); //cantidad de eventos
             const nextPage=((parsedOffset+1) * parsedLimit<=cantidad) ?`/provincias ?`:"null"
             const paginacion = PaginacionConfig.buildPaginationDto(parsedLimit, parsedOffset, cantidad, nextPage)
-            const getProvincia = await ProvinceRepository.getProvincias(parsedLimit, parsedOffset)
-            if (getProvincia!=null) {
-              const collection = {getProvincia, paginacion}
-              return collection;
-            }else{
-              return {getProvincia}
-            }  
+            const collection = await ProvinceRepository.getProvincias(parsedLimit, parsedOffset)
+            const collection2 = {collection, paginacion}
+            return collection2; //arreglado
           }
 
           async getProvinciaDetail(id)

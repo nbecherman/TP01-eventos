@@ -10,7 +10,6 @@
   const LocationService = new locationService();
 
   const router = express.Router();
-  
   router.get("/", async (request, response) => {
       const Evento = {};
       const limit = request.query.limit || 10; // Valor por defecto - registros por pagina
@@ -151,11 +150,23 @@
       if(Evento.id_event_location && Evento.max_assistance )
         {
           const eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location);
-          if(eventolocacion.max_capacity > Evento.max_assistance) 
+          if(eventolocacion)
+          {
+            if(eventolocacion.max_capacity < Evento.max_assistance) 
             {
               return response.status(400).send("La asistencia es mayor a la capacidad")
             }
-        }
+          }
+          else
+          {
+            return response.status(400).send("no existe la id location")}
+          }
+          else
+          {
+            return response.status(400).send("No mandaste el id location o la maxima asistencia")}
+
+
+
         
       if (Evento.name) {
           if(Evento.name.length<3) 
@@ -326,9 +337,8 @@
             const date = new Date();
             const dateEvento = new Date(event.start_date);
 
-
-            if (date >= dateEvento) {
-                return response.status(400).send("El evento ya ha sucedido o está programado para hoy.");
+            if (date <= dateEvento) {
+                return response.status(400).send("El evento no ha sucedido o está programado para hoy.");
             }
 
 

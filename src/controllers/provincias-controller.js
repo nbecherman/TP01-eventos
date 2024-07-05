@@ -109,16 +109,16 @@ router.put("/",async (request, response) =>{
       } 
     }
     if (Provincia.longitude ) {
-      if(!isNaN(Provincia.longitude)){ //revusar
+      if(!isNaN(Provincia.longitude)){ 
       }else{
         return response.status(400).send("Longitud no es un numero");
       } 
     }
     if(Provincia.name)
       {
-        if(Provincia.name.length>3)
+        if(Provincia.name.length<3)
           {
-            return response.status(400).send("La provinicia tiene menos de letras");
+            return response.status(400).send("La provinicia tiene menos de 3 letras");
     
           }
       }

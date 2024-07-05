@@ -11,9 +11,9 @@ export default class categoryService {
         const cantidad =  Number.parseInt(await CategoryRepository.cantidadCategorias()); 
         const nextPage=((parsedOffset+1) * parsedLimit<=cantidad) ?`/event-category ?`:"null";
         const paginacion = PaginacionConfig.buildPaginationDto(parsedLimit, parsedOffset, cantidad, nextPage)
-        const allCategorias = await CategoryRepository.getAllCategorias(parsedLimit, parsedOffset)
-        const collection = {allCategorias, paginacion}
-        return collection;
+        const collection = await CategoryRepository.getAllCategorias(parsedLimit, parsedOffset)
+        const collection2 = {collection, paginacion}
+        return collection2;
       }
 
       async getCategoriaById(id) {
@@ -29,10 +29,10 @@ export default class categoryService {
         return await CategoryRepository.updateCategory(Categoria);
     }
       
-    async deleteCategory(id) {
-      return await CategoryRepository.deleteCategory(id);
-  }
-    
+      async deleteCategory(id) {
+        return await CategoryRepository.deleteCategory(id);
+    }
+      
 
 
 } 

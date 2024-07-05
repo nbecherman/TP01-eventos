@@ -187,11 +187,20 @@ export default class eventRepository
       }
      
       query += `
+      GROUP BY 
+          e.id,
+          ec.id,
+          el.id,
+          l.id,
+          p.id,
+          u.id
       ORDER BY e.id ASC 
-      LIMIT $${values.length + 1} OFFSET $${values.length + 2}
-  `;
+      LIMIT $${values.length + 1} OFFSET $${values.length + 2};
+    `;
+    
+  
       values.push(limit);
-      values.push(offset * limit);
+      values.push(offset);
       
       console.log("Consulta SQL:", query); 
       console.log("Valores de los parámetros:", values); 
