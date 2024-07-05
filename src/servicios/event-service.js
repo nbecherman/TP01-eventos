@@ -104,6 +104,11 @@ export default class eventService {
       return EventRepository.patchEvento(id,id_user,observations,rating)
     }
 
+    async getEventByEventLocation(id) {
+      return EventRepository.getEventByEventLocation(id)
+    }
+
+    
   }
 
 

@@ -72,7 +72,6 @@ export default class locationRepository
 }
 
 
-    // Método para obtener eventos de una ubicación específica con paginación
     async getEventLocationsByLocation(id, limit, offset) {
       let returnEntity = null;
       try {

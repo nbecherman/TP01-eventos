@@ -562,6 +562,24 @@ async updateEvent(evento) {
             console.log("Result:", returnEntity);
             return returnEntity;
         }
+
+        async getEventByEventLocation(id) {
+          const query = "SELECT * FROM events WHERE id_event_location = $1";
+          let returnEntity = null;
+          try {
+            const values = [id];
+            const result = await this.DBClient.query(query, values);
+            console.log(result.rows.length)
+            if (result.rows.length > 0) {
+              returnEntity = result.rows[0];
+            }
+          } catch (error) {
+            console.log(error);
+          }
+          console.log(returnEntity);
+          return returnEntity;
+        }
+
       }
 
 
