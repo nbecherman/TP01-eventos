@@ -1,0 +1,65 @@
+/* src/components/Login.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .login-box {
+    background-color: white;
+    border-radius: 20px; /* Bordes más redondeados */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); /* Sombra más prominente */
+    padding: 60px; /* Espacio interno más amplio */
+    width: 450px;  /* Caja de formulario más grande */
+    text-align: center;
+  }
+  
+  h2 {
+    margin-bottom: 30px;
+    font-size: 32px; /* Título más grande */
+    color: #333;
+  }
+  
+  input {
+    width: 100%;
+    padding: 15px; /* Inputs más grandes */
+    margin: 15px 0; /* Mayor separación entre inputs */
+    border: 2px solid #ddd; /* Bordes más gruesos */
+    border-radius: 10px; /* Bordes redondeados */
+    font-size: 18px; /* Texto más grande en los inputs */
+  }
+  
+  button {
+    width: 100%;
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px; /* Botón más grande */
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  p {
+    margin-top: 30px;
+    font-size: 16px;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 16px;
+  }
+  
