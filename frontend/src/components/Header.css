@@ -2,27 +2,52 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  background-color: #f8f8f8;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
 }
 
 .logo {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: bold;
 }
 
-nav ul {
+.nav-links {
   list-style: none;
   display: flex;
-  gap: 15px;
+  gap: 20px;
 }
 
-nav ul li {
-  display: inline;
+.nav-links a {
+  color: white;
+  text-decoration: none;
 }
 
-nav ul li button {
-  background: none;
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-icon {
+  font-size: 1.5rem;
+}
+
+.username {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.logout-button {
+  padding: 5px 10px;
+  background-color: #ff4d4d;
   border: none;
+  color: white;
   cursor: pointer;
+  border-radius: 5px;
 }
+
+.logout-button:hover {
+  background-color: #ff3333;
+}
+

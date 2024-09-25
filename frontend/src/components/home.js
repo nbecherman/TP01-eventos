@@ -87,18 +87,22 @@ const Home = () => {
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
       <ul className="event-list">
-        {events.map((event) => (
-          <li key={event.id} className="event-item">
-            <a href={`/event/${event.id}`} className="event-link">
-              <h3>{event.name}</h3>
-              <p>{event.description}</p>
-              <p><strong>Fecha de inicio:</strong> {new Date(event.start_date).toLocaleString()}</p>
-              <p><strong>Duración:</strong> {event.duration_in_minutes} minutos</p>
-              <p><strong>Precio:</strong> {event.price} USD</p>
-            </a>
-          </li>
-        ))}
-      </ul>
+  {Array.isArray(events) && events.length > 0 ? (
+    events.map((event) => (
+      <li key={event.id} className="event-item">
+        <a href={`/event/${event.id}`} className="event-link">
+          <h3>{event.name}</h3>
+          <p>{event.description}</p>
+          <p><strong>Fecha de inicio:</strong> {new Date(event.start_date).toLocaleString()}</p>
+          <p><strong>Duración:</strong> {event.duration_in_minutes} minutos</p>
+          <p><strong>Precio:</strong> {event.price} USD</p>
+        </a>
+      </li>
+    ))
+  ) : (
+    <p>No hay eventos disponibles</p>
+  )}
+</ul>
 
       {pagination && (
         <div className="pagination">
