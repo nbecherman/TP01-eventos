@@ -61,5 +61,14 @@ router.post("/register", async (request, response) => {
   }
 });
 
+router.get("/profile", async (req, res) => {
+  const userId = req.user.id; // Extraes el id
+  const user = await UserService.getUserById(userId); // Consultas a la base de datos
+  if (user) {
+      return res.status(200).json(user); // Devuelves los detalles del usuario
+  } else {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+  }
+});
 
 export default router;

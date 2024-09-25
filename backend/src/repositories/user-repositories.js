@@ -24,6 +24,21 @@ export default class userRepository
         return returnEnity;
     }
 
+    
+    async getUserById(userId){
+        let returnEnity=null;
+        try{
+            const sql="SELECT * FROM users where id=$1";
+            const values=[userId];
+            const result=await this.DBClient.query(sql,values);
+            if(result.rows.length>0){
+                returnEnity=result.rows[0];
+            }
+        }catch(error){
+            console.log(error)
+        }
+        return returnEnity;
+    }
     async registrarse(first_name,last_name,username,password){
         let returnEnity=null;
         try{

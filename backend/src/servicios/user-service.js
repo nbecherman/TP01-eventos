@@ -35,5 +35,17 @@ async register(first_name,last_name,username,password)
     return await UserRepository.getUserByName(user,pass) //obtengo el user
   }
 
+
+  async getUserById(userId)
+{
+  const user = await UserRepository.getUserById(userId);
+  return user;
+}
+
+ async getUserByPayload(user,pass){
+    return await UserRepository.getUserByName(user,pass) //obtengo el user
+  }
+
+
 }
 

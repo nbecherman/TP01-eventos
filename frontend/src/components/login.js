@@ -19,8 +19,10 @@ function Login({ onLogin }) { // Recibe la función onLogin como prop
             });
 
             if (response.status === 200) {
-                const userData = response.data; // Asegúrate de que tu API devuelve los datos correctos
-                onLogin(userData); // Llama a la función de login con los datos del usuario
+
+                console.log(response.data.token);
+                localStorage.setItem('token', JSON.stringify(response.data.token)); // Guarda los datos del usuario
+                localStorage.setItem('user', JSON.stringify(username)); // Guarda los datos del usuario
                 navigate('/home'); // Redirige a la página de inicio
             }
         } catch (error) {
