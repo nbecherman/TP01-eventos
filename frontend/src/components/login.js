@@ -1,14 +1,23 @@
 // src/components/Login.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 
-function Login({ onLogin }) { // Recibe la función onLogin como prop
+function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [token, setToken] = useState(null);
     const navigate = useNavigate();
+
+    // Cargar el token desde localStorage cuando el componente se monte
+    useEffect(() => {
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        if (storedToken) {
+            setToken(storedToken);
+        }
+    }, []);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -19,16 +28,23 @@ function Login({ onLogin }) { // Recibe la función onLogin como prop
             });
 
             if (response.status === 200) {
+                const receivedToken = response.data.token;
+                setToken(receivedToken);
 
-                console.log(response.data.token);
-                localStorage.setItem('token', JSON.stringify(response.data.token)); // Guarda los datos del usuario
-                localStorage.setItem('user', JSON.stringify(username)); // Guarda los datos del usuario
-                navigate('/home'); // Redirige a la página de inicio
+                // Guardar el token en localStorage
+                localStorage.setItem('token', JSON.stringify(receivedToken));
+
+                // Redirigir al usuario a la página de inicio
+                navigate('/home');
             }
         } catch (error) {
             setErrorMessage('Error en el inicio de sesión');
-            console.error(error);
         }
+    };
+
+    const handleLogout = () => {
+        setToken(null);
+        localStorage.removeItem('token');
     };
 
     return (
@@ -56,6 +72,11 @@ function Login({ onLogin }) { // Recibe la función onLogin como prop
                 <p>
                     ¿No tienes una cuenta? <Link to="/register">Regístrate</Link>
                 </p>
+                {token && (
+                    <button onClick={handleLogout}>
+                        Cerrar sesión
+                    </button>
+                )}
             </div>
         </div>
     );
