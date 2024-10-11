@@ -1,31 +1,29 @@
-// src/components/Header.js
-import React from 'react';
-import { Link,useNavigate } from 'react-router-dom';
-import './Header.css'; // Estilos
+import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
+import './Header.css'; 
 
-const Header = ({ user, onLogout }) => {
-    const token = localStorage.getItem('token');    
-    const userP = localStorage.getItem('user');    
+const Header = () => {
+    const { token, user, logout } = useContext(UserContext);
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.clear();
-        navigate('/'); // Redirige a la página de inicio
+        logout();
+        navigate('/');
     };
-
+    
     return (
         <header className="header">
             <div className="logo">Mi Sitio</div>
-            {userP && (
+            {user ? (
                 <div className="user-info">
-                    <span className="user-icon">👤</span> {/* Puedes reemplazar esto con un icono real */}
-                    <span className="username">{userP}</span>
+                    <span className="user-icon">👤</span>
+                    <span className="username">{user.username}</span>
                     <button className="logout-button" onClick={handleLogout}>Cerrar sesión</button>
                 </div>
-            )}
+            ) : null}
         </header>
     );
 };
 
 export default Header;
-

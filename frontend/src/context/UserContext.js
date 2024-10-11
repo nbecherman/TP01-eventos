@@ -12,11 +12,15 @@ export const UserProvider = ({ children }) => {
 
     // Cargar el token desde localStorage cuando el componente se monte
     useEffect(() => {
-        const storedToken = JSON.parse(localStorage.getItem('token'));
-        const storedUser = JSON.parse(localStorage.getItem('user'));
-        if (storedToken) {
-            setToken(storedToken);
-            setUser(storedUser);
+        const storedToken = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+        if (storedToken && storedUser) {
+            try {
+                setToken(JSON.parse(storedToken));
+                setUser(JSON.parse(storedUser));
+            } catch (error) {
+                console.error("Error al parsear los datos del localStorage:", error);
+            }
         }
     }, []);
 
@@ -30,12 +34,11 @@ export const UserProvider = ({ children }) => {
 
             if (response.status === 200) {
                 const receivedToken = response.data.token;
+                const resultUser = response.data.user2;
                 setToken(receivedToken);
-                setUser(username);
-
-                // Guardar el token y el usuario en localStorage
+                setUser(resultUser);
                 localStorage.setItem('token', JSON.stringify(receivedToken));
-                localStorage.setItem('user', JSON.stringify(username));
+                localStorage.setItem('user', JSON.stringify(resultUser));
             }
         } catch (error) {
             console.error('Error en el inicio de sesión', error);
@@ -43,7 +46,6 @@ export const UserProvider = ({ children }) => {
         }
     };
 
-    // Función para cerrar sesión
     const logout = () => {
         setToken(null);
         setUser(null);
@@ -51,7 +53,6 @@ export const UserProvider = ({ children }) => {
         localStorage.removeItem('user');
     };
 
-    // Valores que provee el contexto
     return (
         <UserContext.Provider value={{ user, token, login, logout }}>
             {children}
