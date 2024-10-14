@@ -501,16 +501,16 @@ async updateEvent(evento) {
         try {
           const sql = `INSERT INTO event_enrollments (id_event, id_user, description, registration_date_time, attended, observations, rating) 
                        VALUES ($1, $2, $3, $4, $5, $6, $7) 
-                       RETURNING *`; // Usamos RETURNING para obtener el registro insertado
+                       RETURNING *`; 
       
           const values = [
             event_enrollment.idEvento,
             event_enrollment.id_user,
-            event_enrollment.description || 'Inscripción al evento', // Descripción por defecto
+            event_enrollment.description || 'Inscripción al evento', 
             event_enrollment.registration_date_time,
-            event_enrollment.attended || false, // Valor por defecto para 'attended'
-            null, // Observaciones (puedes modificar esto según tus necesidades)
-            null  // Calificación (puedes modificar esto según tus necesidades)
+            event_enrollment.attended || false,
+            null, 
+            null 
           ];
       
           const result = await this.DBClient.query(sql, values);
