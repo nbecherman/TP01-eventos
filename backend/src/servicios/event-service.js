@@ -78,11 +78,9 @@ export default class eventService {
       return EventRepository.isUserRegistered(idEvento,idUser)
     }
 
-    async InscripcionEvento(event_enrollment)
-    {
-      await EventRepository.InscripcionEvento(event_enrollment)
-      return "inscripto";
-
+    async InscripcionEvento(event_enrollment) {
+      const result = await EventRepository.InscripcionEvento(event_enrollment);
+      return result ? "Inscripto" : "Error en la inscripción"; 
     }
 
     async CambiarRating(idEvento, rating) {

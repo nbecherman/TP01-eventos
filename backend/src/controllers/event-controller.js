@@ -239,53 +239,61 @@
     });
 
 
-    router.post("/:id/enrollment",authMiddleware,async(request, response) => { //postman
-
-      const event_enrollment = {};
-       event_enrollment.idEvento = request.params.id; 
-       event_enrollment.id_user = request.user.id;  
-       event_enrollment.description = request.body.description;  
-       event_enrollment.registration_date_time = new Date().toISOString();
-       event_enrollment.attended = request.body.attended;  
- 
-
-       const event = await EventService.getEventId(event_enrollment.idEvento);
-       const inscriptos = await EventService.getInscriptosAlEvento(event_enrollment.idEvento);
-       console.log(inscriptos);
-
+    router.post("/:id/enrollment", authMiddleware, async (request, response) => {
+      const event_enrollment = {
+        idEvento: request.params.id,
+        id_user: request.user.id,
+        description: request.body.description || 'Inscripción al evento', // Descripción por defecto
+        attended: request.body.attended || false, // Valor por defecto
+        registration_date_time: new Date().toISOString()
+      };
+    
       try {
+        // Verificar la existencia del evento
+        const event = await EventService.getEventId(event_enrollment.idEvento);
         if (!event) {
           return response.status(404).send("El evento no existe.");
         }
-      
+    
+        // Verificar si el usuario ya está registrado
         const registrado = await EventService.isUserRegistered(event_enrollment.idEvento, event_enrollment.id_user);
-        console.log(registrado);
         if (registrado) {
-            return response.status(400).send("El usuario ya está registrado en el evento.");
+          return response.status(400).send("El usuario ya está registrado en el evento.");
         }
-       
+    
+        // Verificar si el evento está habilitado para inscripciones
         if (!event.enabled_for_enrollment) {
           return response.status(400).send("El evento no está habilitado para la inscripción.");
-          }
-
-          const date = new Date();
-          const dateEvento = new Date(event.start_date);
-          if (date >= dateEvento) {
-              return response.status(400).send("El evento ya ha sucedido o está programado para hoy.");
-          }
-
-
-          if (event.max_assistance <= inscriptos ) {
-              return response.status(400).send("Se ha excedido la capacidad máxima de registrados.");
-          }
-
-        const inscripcion = await EventService.InscripcionEvento(event_enrollment);
-        return response.json(inscripcion);
+        }
+    
+        // Verificar la fecha del evento
+        const date = new Date();
+        const dateEvento = new Date(event.start_date);
+        if (date >= dateEvento) {
+          return response.status(400).send("El evento ya ha sucedido o está programado para hoy.");
+        }
+    
+        // Verificar la capacidad máxima
+        const inscriptos = await EventService.getInscriptosAlEvento(event_enrollment.idEvento);
+        if (event.max_assistance <= inscriptos) {
+          return response.status(400).send("Se ha excedido la capacidad máxima de registrados.");
+        }
+    
+        // Inscribir al usuario en el evento
+        const inscriptionResult = await EventService.InscripcionEvento(event_enrollment);
+        if (inscriptionResult) {
+          console.log("aaaaaaaaaaaaaaaaaa");
+          
+          return response.status(201).send("Inscripción exitosa.");
+        } else {
+          return response.status(500).send("Error en la inscripción.");
+        }
       } catch (error) {
-        console.log(error);
-        return response.json(error);
+        console.error("Error en la inscripción:", error);
+        return response.status(500).json({ error: 'Error interno del servidor.' });
       }
     });
+    
 
     router.delete("/:id/enrollment", authMiddleware , async (request, response) => { //postman
       const id = request.params.id;

@@ -1,16 +1,12 @@
-// src/context/UserContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-// Crear el contexto
 export const UserContext = createContext();
 
-// Proveedor del contexto
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
 
-    // Cargar el token desde localStorage cuando el componente se monte
     useEffect(() => {
         const storedToken = localStorage.getItem('token');
         const storedUser = localStorage.getItem('user');
@@ -24,7 +20,6 @@ export const UserProvider = ({ children }) => {
         }
     }, []);
 
-    // Función para iniciar sesión
     const login = async (username, password) => {
         try {
             const response = await axios.post('http://localhost:3100/api/user/login', {
@@ -34,7 +29,7 @@ export const UserProvider = ({ children }) => {
 
             if (response.status === 200) {
                 const receivedToken = response.data.token;
-                const resultUser = response.data.user2;
+                const resultUser = response.data.user;
                 setToken(receivedToken);
                 setUser(resultUser);
                 localStorage.setItem('token', JSON.stringify(receivedToken));

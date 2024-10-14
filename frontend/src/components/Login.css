@@ -38,16 +38,15 @@ body {
     font-size: 18px; /* Texto más grande en los inputs */
   }
   
-  button {
-    width: 100%;
-    padding: 15px;
-    background-color: #4CAF50;
+  .login-box button {
+    background-color: #007BFF;
     color: white;
     border: none;
-    border-radius: 10px;
-    font-size: 18px; /* Botón más grande */
     cursor: pointer;
-  }
+    transition: background-color 0.3s ease;
+    width: 107%;
+
+}
   
   button:hover {
     background-color: #45a049;

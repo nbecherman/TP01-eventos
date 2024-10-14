@@ -6,6 +6,8 @@ import Footer from './components/Footer';
 import Login from './components/login'; // Cambié 'login' a 'Login' para mantener la convención de mayúsculas
 import Register from './components/Register';
 import Home from './components/home';
+import Event from './components/event';
+
 import { UserProvider } from './context/UserContext'; // Importa el UserProvider
 
 function App() {
