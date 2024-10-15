@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../context/UserContext';
-import FormularioEvento from './formulario'; // Importa el formulario
-import Modal from './modal'; // Importa el modal
+import FormularioEvento from './formulario';
+import Modal from './modal';
 import './Home.css'; 
 
 const Home = () => {
@@ -18,7 +18,7 @@ const Home = () => {
     const [limit] = useState(10);
     const [offset, setOffset] = useState(0);
     const [pagination, setPagination] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const fetchEvents = async () => {
         try {
@@ -31,8 +31,11 @@ const Home = () => {
             });
             setEvents(response.data.collection);
             setPagination(response.data.paginacion);
+            setErrorMessage('');
         } catch (error) {
-            setErrorMessage('Error al cargar los eventos');
+            const message = error.response?.data?.message || 'Error al cargar los eventos';
+            setErrorMessage(message);
+            alert(message);
         }
     };
 
@@ -51,14 +54,13 @@ const Home = () => {
                     }
                 }
             );
-  
+
             if (response.status === 201) {
-                console.log("Inscripción exitosa:", response.data);
                 alert("Inscripto con éxito.");
             }
         } catch (error) {
-            console.error("Error en la inscripción:", error);
-            alert(`Error: ${error.message}`);
+            const message =  error.response?.data|| 'Error al inscribirse en el evento';
+            alert(message);
         }
     };
 
@@ -80,7 +82,7 @@ const Home = () => {
     return (
         <div className="container">
             <h1>Eventos</h1>
-            <button onClick={() => setIsModalOpen(true)}>Crear Evento</button> {/* Botón para abrir el modal */}
+            <button onClick={() => setIsModalOpen(true)}>Crear Evento</button>
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <FormularioEvento />
             </Modal>

@@ -24,11 +24,10 @@ const FormularioEvento = () => {
             [name]: type === 'checkbox' ? checked : value
         });
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3100/api/event/', { 
+            const response = await axios.post('http://localhost:3100/api/event', { 
                 ...evento, 
                 id_creator_user: token 
             }, {
@@ -36,12 +35,17 @@ const FormularioEvento = () => {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            console.log('Evento creado:', response.data);
+            
+            alert("Insertado con exito");
+            
         } catch (error) {
-            console.error('Error al crear el evento:', error);
+            if (error.response.data) {
+                alert(error.response.data);
+            } else {
+                alert('Ocurrió un error al crear el evento. Inténtalo de nuevo.');
+            }
         }
     };
-
     return (
         <div>
             <h1>Crear Evento</h1>

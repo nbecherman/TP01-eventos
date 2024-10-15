@@ -73,59 +73,46 @@
     });
 
     
-    router.post("/",authMiddleware,async(request, response) => {  // postman 
+    router.post("/", authMiddleware, async (request, response) => { // postman
       const Evento = {};
       Evento.name = request.body.name;
       Evento.description = request.body.description;
-      Evento.id_event_category = request.body.id_event_category
-      Evento.id_event_location = request.body.id_event_location
+      Evento.id_event_category = request.body.id_event_category;
+      Evento.id_event_location = request.body.id_event_location;
       Evento.start_date = request.body.start_date;
       Evento.duration_in_minutes = request.body.duration_in_minutes;
       Evento.price = request.body.price;
       Evento.enabled_for_enrollment = request.body.enabled_for_enrollment;
       Evento.max_assistance = request.body.max_assistance;
-      Evento.id_creator_user = request.user.id; 
-
+      Evento.id_creator_user = request.user.id;
+  
       try {
-
-        var eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location) 
-
-        if (Evento.name && Evento.description && Evento.id_event_category && Evento.id_event_location && Evento.start_date && Evento.duration_in_minutes && Evento.price && Evento.enabled_for_enrollment && Evento.max_assistance && Evento.id_creator_user) 
-        {
-          if (eventolocacion.max_capacity > Evento.max_assistance)
-          {
-             if(Evento.name.length >3 && Evento.description.length >3) 
-            {
-              if  (Evento.price > 0 && Evento.duration_in_minutes > 0) 
-              {
-                const eventoCreado = await EventService.createEvent(Evento);
-                return response.status(201).json(eventoCreado);
-              } 
-              else
-              {
-                return response.status(400).send("el precio y/o la duracion es menor a 0 ")
+          var eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location);
+  
+          if (Evento.name && Evento.description && Evento.id_event_category && Evento.id_event_location && Evento.start_date && Evento.duration_in_minutes && Evento.price && Evento.enabled_for_enrollment && Evento.max_assistance && Evento.id_creator_user) {
+              if (eventolocacion.max_capacity > Evento.max_assistance) {
+                  if (Evento.name.length > 3 && Evento.description.length > 3) {
+                      if (Evento.price > 0 && Evento.duration_in_minutes > 0) {
+                          const eventoCreado = await EventService.createEvent(Evento);
+                          return response.status(201).json({ message: "Evento creado exitosamente" });
+                      } else {
+                          return response.status(400).json({ message: "El precio y/o la duración son menores a 0" });
+                      }
+                  } else {
+                      return response.status(400).json({ message: "El nombre y/o descripción tienen menos de 3 caracteres" });
+                  }
+              } else {
+                  return response.status(400).json({ message: "La asistencia es mayor a la capacidad" });
               }
-            }
-            else
-            {
-              return response.status(400).send("el nombre y/o descripcion tiene menos de 3 caracteres ")
-            }
+          } else {
+              return response.status(400).json({ message: "Error en el tipo de dato o faltan campos" });
           }
-          else
-          {
-            return response.status(400).send("La asistencia es mayor a la capacidad")
-          }
-        }
-        else
-        {
-          return response.status(400).send("Error en el tipo de dato o faltan")
-        }
       } catch (error) {
-      console.error("Error al crear una nuevo evento:", error);
-      return response.json("Un Error");
+          console.error("Error al crear un nuevo evento:", error);
+          return response.status(500).json({ message: "Ocurrió un error al crear el evento", error: error.message });
       }
   });
-
+  
   router.put("/",authMiddleware,async(request, response) => {  //postman
     const Evento = {};
     Evento.name = request.body.name;
@@ -252,42 +239,37 @@
         // Verificar la existencia del evento
         const event = await EventService.getEventId(event_enrollment.idEvento);
         if (!event) {
-          return response.status(404).send("El evento no existe.");
+          return response.status(404).json({ error: 'El evento no existe.' });
         }
     
         // Verificar si el usuario ya está registrado
         const registrado = await EventService.isUserRegistered(event_enrollment.idEvento, event_enrollment.id_user);
         if (registrado) {
-          return response.status(400).send("El usuario ya está registrado en el evento.");
+          return response.status(400).json({ error: 'El usuario ya está registrado en el evento.' });
         }
     
         // Verificar si el evento está habilitado para inscripciones
         if (!event.enabled_for_enrollment) {
-          return response.status(400).send("El evento no está habilitado para la inscripción.");
+          return response.status(400).json({ error: 'El evento no está habilitado para la inscripción.' });
         }
     
         // Verificar la fecha del evento
         const date = new Date();
         const dateEvento = new Date(event.start_date);
         if (date >= dateEvento) {
-          return response.status(400).send("El evento ya ha sucedido o está programado para hoy.");
+          return response.status(400).json({ error: 'El evento ya ha sucedido o está programado para hoy.' });
         }
     
         // Verificar la capacidad máxima
         const inscriptos = await EventService.getInscriptosAlEvento(event_enrollment.idEvento);
         if (event.max_assistance <= inscriptos) {
-          return response.status(400).send("Se ha excedido la capacidad máxima de registrados.");
+          return response.status(400).json({ error: 'Se ha excedido la capacidad máxima de registrados.' });
         }
     
         // Inscribir al usuario en el evento
-        const inscriptionResult = await EventService.InscripcionEvento(event_enrollment);
-        if (inscriptionResult) {
-          console.log("aaaaaaaaaaaaaaaaaa");
-          
-          return response.status(201).send("Inscripción exitosa.");
-        } else {
-          return response.status(500).send("Error en la inscripción.");
-        }
+        await EventService.InscripcionEvento(event_enrollment);
+        return response.status(201).json({ message: 'Inscripción exitosa.' });
+    
       } catch (error) {
         console.error("Error en la inscripción:", error);
         return response.status(500).json({ error: 'Error interno del servidor.' });

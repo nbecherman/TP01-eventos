@@ -326,22 +326,32 @@ export default class eventRepository
     
 
 
-      async createEvent(evento) {
-        var returnEntity = null;
-        try {
-          const sql = `Insert into events(name,description,id_event_category,id_event_location,start_date,duration_in_minutes,price,enabled_for_enrollment,max_assistance,id_creator_user) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`;
-          const values = [evento.name, evento.description, evento.id_event_category, evento.id_event_location, evento.start_date, evento.duration_in_minutes, evento.price, evento.enabled_for_enrollment, evento.max_assistance,evento.id_creator_user];
+    async createEvent(evento) {
+      let returnEntity = null;
+      try {  
+          const sql = `INSERT INTO events(name, description, id_event_category, id_event_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user) 
+                       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`;
+          const values = [
+              evento.name,
+              evento.description,
+              evento.id_event_category,
+              evento.id_event_location,
+              evento.start_date,
+              evento.duration_in_minutes,
+              evento.price,
+              evento.enabled_for_enrollment,
+              evento.max_assistance,
+              evento.id_creator_user
+          ];
           const result = await this.DBClient.query(sql, values);
-    
-          if (result.rowsAffected.length > 0) {
-            returnEntity = result.rowsAffected[0];
+            if (result.rows.length > 0) {
+              returnEntity = result.rows[0];
           }
-        } catch (error) {
+      } catch (error) {
           console.log(error);
-        }
-        return returnEntity;
-      }  
-
+      }
+      return returnEntity;
+  }
 async updateEvent(evento) {
     let returnEntity = null;
     let query = ''; 

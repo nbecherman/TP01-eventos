@@ -41,8 +41,9 @@ export default class eventService {
 
   async createEvent(evento)
   {
-    await EventRepository.createEvent(evento);
-    return "Insertado";
+    console.log(evento);
+    const returnEntity = await EventRepository.createEvent(evento);
+    return returnEntity;
   }
   
   async updateEvent(evento)
