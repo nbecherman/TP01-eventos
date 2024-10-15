@@ -12,6 +12,7 @@ async getEventLocationById(id) //sacar de aca
     return getEventLocationById;
 }   
 
+
 async getLocationByProvince(id) //se utiliza en province
 {
     const getLocationByProvince = await LocationRepository.getLocationByProvince(id);

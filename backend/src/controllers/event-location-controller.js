@@ -28,8 +28,17 @@ router.get("/", AuthMiddleware, async (request, response) => {
   }
 });
 
-// Ruta para obtener una event_location específica por ID, solo si pertenece al usuario autenticado
-router.get("/:id", AuthMiddleware, async (request, response) => {
+router.get("/all", async (request, response) => {
+try {
+  const eventLocations = await EventLocationService.getAllEventLocations();
+    return response.status(200).json(eventLocations);
+} catch (error) {
+  console.log(error);
+  return response.status(500).json({ error: "error" });
+}
+});
+
++router.get("/:id", AuthMiddleware, async (request, response) => {
     const limit = request.query.limit || 10; 
     const offset = request.query.offset||0; 
     const id_creator_user = request.user.id; 

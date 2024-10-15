@@ -17,6 +17,17 @@ router.get("/", async (request, response) => {
     }
   })
 
+  
+router.get("/Alltags", async (request, response) => {
+  try {
+    const Alltags = await categoriaSrv.Alltags();
+    return response.status(200).json(Alltags);
+  }
+  catch(error){
+    console.log(error);
+  }
+})
+
 router.get("/:id", async (request, response) => {
     const id = request.params.id;
     try {

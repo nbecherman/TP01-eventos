@@ -49,6 +49,21 @@ export default class categoryRepository
             return returnEnity;
         }
 
+        async Alltags(){
+          let returnEnity=null;
+          try{
+              const sql="SELECT * FROM event_tags";
+              const result=await this.DBClient.query(sql);
+              if(result.rows.length>0){
+                  returnEnity=result.rows[0];
+              }
+          }catch(error){
+              console.log(error)
+          }
+          return returnEnity;
+      }
+
+        
         async insertCategory(Categoria) {
             try {
                 const sql = "INSERT INTO event_categories (name, display_order) VALUES ($1, $2)"; 

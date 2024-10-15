@@ -48,7 +48,21 @@ export default class eventLocationRepository
         }
         return returnEntity;
     }
+    
 
+    async getAllEventLocations() {
+        let returnEntity = null;
+        try {
+            const sql = `SELECT * FROM event_locations`;
+            const result = await this.DBClient.query(sql);
+            if(result.rows.length>0){
+                returnEntity=result.rows;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        return returnEntity;
+    }
      // Obtiene todas las event-locations creadas por un usuario específico con paginación
     async getEventLocationsByUser(id_creator_user, limit, offset) {
         let returnEntity = null;

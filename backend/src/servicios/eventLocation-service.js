@@ -41,6 +41,13 @@ export default class eventLocation
                     return getEventLocation;
                 } 
 
+                async getAllEventLocations() 
+                  {
+                      const getAllEventLocations = await EventLocation.getAllEventLocations();
+                      return getAllEventLocations;
+                  }   
+
+
                 async getEventLocationByUserSinPag(id,id_creator_user) 
                 {
                     const getEventLocation2 = await EventLocation.getEventLocationByUserSinPag(id,id_creator_user);

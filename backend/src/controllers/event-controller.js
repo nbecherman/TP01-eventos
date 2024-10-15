@@ -79,6 +79,7 @@
       Evento.description = request.body.description;
       Evento.id_event_category = request.body.id_event_category;
       Evento.id_event_location = request.body.id_event_location;
+      Evento.id_tag = request.body.tag;
       Evento.start_date = request.body.start_date;
       Evento.duration_in_minutes = request.body.duration_in_minutes;
       Evento.price = request.body.price;
@@ -88,8 +89,8 @@
   
       try {
           var eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location);
-  
-          if (Evento.name && Evento.description && Evento.id_event_category && Evento.id_event_location && Evento.start_date && Evento.duration_in_minutes && Evento.price && Evento.enabled_for_enrollment && Evento.max_assistance && Evento.id_creator_user) {
+          
+          if (Evento.name && Evento.description && Evento.id_event_category && Evento.id_event_location && Evento.start_date && Evento.duration_in_minutes && Evento.price && Evento.enabled_for_enrollment && Evento.max_assistance && Evento.id_creator_user && Evento.id_tag) {
               if (eventolocacion.max_capacity > Evento.max_assistance) {
                   if (Evento.name.length > 3 && Evento.description.length > 3) {
                       if (Evento.price > 0 && Evento.duration_in_minutes > 0) {

@@ -20,6 +20,12 @@ export default class categoryService {
         return await CategoryRepository.getCategoriaByID(id);
     }
 
+    async Alltags() {
+      return await CategoryRepository.Alltags();
+  }
+
+    
+
         async insertCategoria(Categoria) {
           await CategoryRepository.insertCategory(Categoria);
           return "OK create" 
