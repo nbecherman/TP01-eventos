@@ -22,41 +22,30 @@ const FormularioEvento = () => {
     const [tags, setTags] = useState([]);
 
     useEffect(() => {
-        const fetchCategorias = async () => {
+        const fetchData = async (url, setter, dataProcessor) => {
             try {
-                const response = await axios.get('http://localhost:3100/api/event-category');
-                if (Array.isArray(response.data)) {
-                    setCategorias(response.data);
+                const response = await axios.get(url);
+                console.log(response.data);
+                const processedData = dataProcessor(response.data);
+                if (Array.isArray(processedData)) {
+                    setter(processedData);
                 } else {
-                    setCategorias([]); // Si no es un array, define un array vacío
+                    console.error('Processed data is not an array');
+                    setter([]);
                 }
             } catch (error) {
                 console.error(error);
-                setCategorias([]); // En caso de error, maneja la situación con un array vacío
+                setter([]);
             }
         };
 
-        const fetchEventLocations = async () => {
-            try {
-                const response = await axios.get('http://localhost:3100/api/event-location/all');
-                setEventLocations(response.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
+        const processCategorias = (data) => data.collection || [];
+        const processEventLocations = (data) => Array.isArray(data) ? data : [data];
+        const processTags = (data) =>Array.isArray(data) ? data : [data];
 
-        const fetchTags = async () => {
-            try {
-                const response = await axios.get('http://localhost:3100/api/event-category/Alltags');
-                setTags(response.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchCategorias();
-        fetchEventLocations();
-        fetchTags();
+        fetchData('http://localhost:3100/api/event-category', setCategorias, processCategorias);
+        fetchData('http://localhost:3100/api/event-location/all', setEventLocations, processEventLocations);
+        fetchData('http://localhost:3100/api/event-category/Alltags', setTags, processTags);
     }, []);
 
     const handleChange = (e) => {
@@ -69,6 +58,7 @@ const FormularioEvento = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log(evento + "aaa");
         try {
             const response = await axios.post('http://localhost:3100/api/event', { 
                 ...evento, 
@@ -80,7 +70,7 @@ const FormularioEvento = () => {
             });
             alert("Insertado con éxito");
         } catch (error) {
-            if (error.response.data) {
+            if (error.response && error.response.data) {
                 alert(error.response.data);
             } else {
                 alert('Ocurrió un error al crear el evento. Inténtalo de nuevo.');
@@ -104,13 +94,9 @@ const FormularioEvento = () => {
                     Categoría:
                     <select name="id_event_category" value={evento.id_event_category} onChange={handleChange} required>
                         <option value="">Seleccionar Categoría</option>
-                        {categorias.length > 0 ? (
-                            categorias.map(categoria => (
-                                <option key={categoria.id} value={categoria.id}>{categoria.name}</option>
-                            ))
-                        ) : (
-                            <option value="">No hay categorías disponibles</option>
-                        )}
+                        {categorias.map(categoria => (
+                            <option key={categoria.id} value={categoria.id}>{categoria.name}</option>
+                        ))}
                     </select>
                 </label>
                 <label>

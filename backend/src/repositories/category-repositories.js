@@ -52,10 +52,10 @@ export default class categoryRepository
         async Alltags(){
           let returnEnity=null;
           try{
-              const sql="SELECT * FROM event_tags";
+              const sql="SELECT * FROM tags";
               const result=await this.DBClient.query(sql);
               if(result.rows.length>0){
-                  returnEnity=result.rows[0];
+                  returnEnity=result.rows;
               }
           }catch(error){
               console.log(error)
