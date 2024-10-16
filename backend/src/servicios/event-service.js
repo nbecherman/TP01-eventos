@@ -41,7 +41,6 @@ export default class eventService {
 
   async createEvent(evento)
   {
-    console.log(evento);
     const returnEntity = await EventRepository.createEvent(evento);
     return returnEntity;
   }

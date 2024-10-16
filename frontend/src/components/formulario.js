@@ -58,26 +58,35 @@ const FormularioEvento = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(evento + "aaa");
+    
+        // Convertir los campos que deben ser números
+        const eventoData = {
+            ...evento,
+            id_event_category: parseInt(evento.id_event_category, 10),
+            id_event_location: parseInt(evento.id_event_location, 10),
+            id_tag: parseInt(evento.id_tag, 10),
+            duration_in_minutes: parseInt(evento.duration_in_minutes, 10),
+            price: parseFloat(evento.price),
+            max_assistance: parseInt(evento.max_assistance, 10),
+            id_creator_user: token
+        };
+        console.log("Datos que se enviarán:", eventoData); 
         try {
-            const response = await axios.post('http://localhost:3100/api/event', { 
-                ...evento, 
-                id_creator_user: token 
-            }, {
+            const response = await axios.post('http://localhost:3100/api/event', eventoData, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            alert("Insertado con éxito");
+            alert("Insertado con éxito");   
         } catch (error) {
             if (error.response && error.response.data) {
-                alert(error.response.data);
+                alert(JSON.stringify(error.response.data)); 
             } else {
                 alert('Ocurrió un error al crear el evento. Inténtalo de nuevo.');
             }
         }
     };
-
+    
     return (
         <div>
             <h1>Crear Evento</h1>

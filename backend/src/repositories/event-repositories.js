@@ -11,6 +11,7 @@ export default class eventRepository
         const {Client} = pg;
         this.DBClient = new Client(DBConfig);
         this.DBClient.connect();
+
     }
 
     query()
@@ -328,7 +329,6 @@ export default class eventRepository
 
     async createEvent(evento) {
       let returnEntity = null;
-      const client = await this.DBClient.connect(); // Asegúrate de conectar al cliente
       try {  
           const sql = `INSERT INTO events(name, description, id_event_category, id_event_location, start_date, duration_in_minutes, price, enabled_for_enrollment, max_assistance, id_creator_user) 
                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`;
@@ -344,20 +344,25 @@ export default class eventRepository
               evento.max_assistance,
               evento.id_creator_user
           ];
-          const result = await client.query(sql, values);
+  
+          const result = await this.DBClient.query(sql, values);
+          console.log('Resultado de la consulta:', result);
+  
           if (result.rows.length > 0) {
               returnEntity = result.rows[0];
-              const tagSql = `INSERT INTO tags (id_event, id_tag) VALUES ($1, $2)`;
-              const tagValues = [returnEntity.id_event, evento.id_tag]; 
-              await client.query(tagSql, tagValues);
+              console.log('Evento creado (returnEntity):', returnEntity);
+              const tagSql = `INSERT INTO event_tags (id_event, id_tag) VALUES ($1, $2)`;
+              const tagValues = [returnEntity.id, evento.id_tag]; 
+              await this.DBClient.query(tagSql, tagValues);
+          } else {
+              console.log('No se devolvieron resultados al crear el evento.');
           }
       } catch (error) {
-          console.log(error);
-      } finally {
-          client.release();
-      }
+          console.log('Error al crear el evento:', error);
+      } 
       return returnEntity;
   }
+  
   
 async updateEvent(evento) {
     let returnEntity = null;

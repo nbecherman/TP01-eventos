@@ -79,14 +79,14 @@
       Evento.description = request.body.description;
       Evento.id_event_category = request.body.id_event_category;
       Evento.id_event_location = request.body.id_event_location;
-      Evento.id_tag = request.body.tag;
+      Evento.id_tag = request.body.id_tag;
       Evento.start_date = request.body.start_date;
       Evento.duration_in_minutes = request.body.duration_in_minutes;
       Evento.price = request.body.price;
       Evento.enabled_for_enrollment = request.body.enabled_for_enrollment;
       Evento.max_assistance = request.body.max_assistance;
       Evento.id_creator_user = request.user.id;
-  
+      console.log(Evento + "aaaaaaaa");
       try {
           var eventolocacion = await LocationService.getEventLocationById(Evento.id_event_location);
           
@@ -235,7 +235,6 @@
         attended: request.body.attended || false, // Valor por defecto
         registration_date_time: new Date().toISOString()
       };
-    
       try {
         // Verificar la existencia del evento
         const event = await EventService.getEventId(event_enrollment.idEvento);
