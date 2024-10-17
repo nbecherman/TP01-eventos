@@ -1,109 +1,51 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #007BFF;
-  }
-  
-  .search-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .search-form input[type="text"],
-  input[type="date"],
-  button {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
- 
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  .error-message {
-    color: red;
-    text-align: center;
-    margin: 10px 0;
-  }
-  
-  .event-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .event-item {
-    margin-bottom: 15px;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 4px;
-    transition: transform 0.2s;
-  }
-  
-  .event-item:hover {
-    transform: scale(1.02);
-  }
-  
-  .event-link {
-    text-decoration: none;
-    color: inherit;
-  }
-  
-  .pagination {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
-  .pagination-button {
-    padding: 10px 20px;
-    border: 1px solid #007BFF;
-    background-color: white;
-    color: #007BFF;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .pagination-button:hover {
-    background-color: #007BFF;
-    color: white;
-  }
-  
-  .event-item-button {
-    align-self: flex-start; /* Alinea el botón a la izquierda */
-    margin-top: 10px; /* Añade un margen superior para separación */
-    background-color: #007BFF; /* Color de fondo */
-    color: white; /* Color del texto */
-    border: none; /* Sin borde */
-    padding: 10px 15px; /* Espaciado interno */
-    border-radius: 4px; /* Bordes redondeados */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
-    transition: background-color 0.3s; /* Efecto de transición */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.event-item-button:hover {
-    background-color: #0056b3; /* Color de fondo en hover */
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-form input,
+.search-form button {
+  flex: 1;
+}
+
+.event-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.event-item {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.event-item-button {
+  margin-top: 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-button {
+  margin: 0 10px;
+}
+
+.error-message {
+  color: var(--error-color);
+  text-align: center;
+  margin-bottom: 20px;
 }

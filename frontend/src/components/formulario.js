@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../context/UserContext';
 
-const FormularioEvento = () => {
+const FormularioEvento = ({ onEventCreated,onClose  }) => {
     const { token } = useContext(UserContext);
     const [evento, setEvento] = useState({
         name: '',
@@ -59,7 +59,6 @@ const FormularioEvento = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        // Convertir los campos que deben ser números
         const eventoData = {
             ...evento,
             id_event_category: parseInt(evento.id_event_category, 10),
@@ -78,9 +77,11 @@ const FormularioEvento = () => {
                 }
             });
             alert("Insertado con éxito");   
+            onEventCreated();
+            onClose();
         } catch (error) {
             if (error.response && error.response.data) {
-                alert(JSON.stringify(error.response.data)); 
+                alert(error.response.data.message);
             } else {
                 alert('Ocurrió un error al crear el evento. Inténtalo de nuevo.');
             }

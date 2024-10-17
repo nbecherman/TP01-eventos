@@ -42,7 +42,6 @@ const Home = () => {
     useEffect(() => {
         fetchEvents();
     }, [searchParams, limit, offset]);
-
     const inscribirseEvento = async (id) => {
         try {
             const response = await axios.post(
@@ -54,13 +53,14 @@ const Home = () => {
                     }
                 }
             );
-
+    
             if (response.status === 201) {
                 alert("Inscripto con éxito.");
             }
         } catch (error) {
-            const message =  error.response?.data|| 'Error al inscribirse en el evento';
-            alert(message);
+            console.log(error);
+            const message = error.response?.data?.error || 'Error al inscribirse en el evento';
+            alert(message);  
         }
     };
 
@@ -84,7 +84,7 @@ const Home = () => {
             <h1>Eventos</h1>
             <button onClick={() => setIsModalOpen(true)}>Crear Evento</button>
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <FormularioEvento />
+            <FormularioEvento onEventCreated={fetchEvents} onClose={() => setIsModalOpen(false)} />
             </Modal>
 
             <form className="search-form" onSubmit={(e) => { e.preventDefault(); fetchEvents(); }}>

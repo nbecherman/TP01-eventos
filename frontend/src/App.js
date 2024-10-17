@@ -1,31 +1,45 @@
-// src/App.js
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useContext, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Login from './components/login'; // Cambié 'login' a 'Login' para mantener la convención de mayúsculas
+import Login from './components/login'; 
 import Register from './components/Register';
 import Home from './components/home';
-import Event from './components/event';
-
-import { UserProvider } from './context/UserContext'; // Importa el UserProvider
+import './App.css';
+import { UserProvider, UserContext } from './context/UserContext'; 
 
 function App() {
+    const { token } = useContext(UserContext); 
+    const navigate = useNavigate(); 
+    useEffect(() => {
+        if (token) {
+            navigate('/home'); 
+        }
+    }, [token, navigate]);
+
     return (
-        <UserProvider> {/* Envuelve la aplicación en UserProvider */}
-            <Router>
-                <div>
-                    <Header />
+        <div className="app-container">
+            <div className="content-wrap">
+                <Header />
+                <main>
                     <Routes>
                         <Route path="/" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/home" element={<Home />} />
                     </Routes>
-                    <Footer />
-                </div>
+                </main>
+            </div>
+            <Footer />
+        </div>
+    );
+}
+
+export default function AppWithProvider() {
+    return (
+        <UserProvider>
+            <Router>
+                <App />
             </Router>
         </UserProvider>
     );
 }
-
-export default App;

@@ -1,53 +1,31 @@
 .header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background-color: #333;
-  color: white;
 }
 
 .logo {
-  font-size: 1.5rem;
+  font-size: 24px;
   font-weight: bold;
-}
-
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-}
-
-.nav-links a {
-  color: white;
-  text-decoration: none;
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  gap: 10px;
 }
 
 .user-icon {
-  font-size: 1.5rem;
+  margin-right: 10px;
 }
 
 .username {
-  font-size: 1rem;
-  font-weight: bold;
+  margin-right: 20px;
 }
 
 .logout-button {
-  padding: 5px 10px;
-  background-color: #ff4d4d;
-  border: none;
-  color: white;
-  cursor: pointer;
-  border-radius: 5px;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
 }
-
-.logout-button:hover {
-  background-color: #ff3333;
-}
-

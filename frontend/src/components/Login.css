@@ -1,64 +1,47 @@
-/* src/components/Login.css */
-
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f7f7f7;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  .login-box {
-    background-color: white;
-    border-radius: 20px; /* Bordes más redondeados */
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); /* Sombra más prominente */
-    padding: 60px; /* Espacio interno más amplio */
-    width: 450px;  /* Caja de formulario más grande */
-    text-align: center;
-  }
-  
-  h2 {
-    margin-bottom: 30px;
-    font-size: 32px; /* Título más grande */
-    color: #333;
-  }
-  
-  input {
-    width: 100%;
-    padding: 15px; /* Inputs más grandes */
-    margin: 15px 0; /* Mayor separación entre inputs */
-    border: 2px solid #ddd; /* Bordes más gruesos */
-    border-radius: 10px; /* Bordes redondeados */
-    font-size: 18px; /* Texto más grande en los inputs */
-  }
-  
-  .login-box button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 107%;
-
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
-  
-  button:hover {
-    background-color: #45a049;
-  }
-  
-  p {
-    margin-top: 30px;
-    font-size: 16px;
-  }
-  
-  .error-message {
-    color: red;
-    font-size: 16px;
-  }
-  
+
+.login-box {
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px var(--shadow-color);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-box h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login-box form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-box input {
+  margin-bottom: 15px;
+}
+
+.login-box button {
+  margin-top: 10px;
+}
+
+.login-box p {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-box a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.login-box a:hover {
+  text-decoration: underline;
+}

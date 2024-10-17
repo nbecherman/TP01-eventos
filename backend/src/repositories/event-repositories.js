@@ -538,11 +538,11 @@ async updateEvent(evento) {
           ];
       
           const result = await this.DBClient.query(sql, values);
-          returnEntity = result.rows[0]; // Devolver el primer registro insertado
+          returnEntity = result.rows[0]; 
         } catch (error) {
           console.log("Error al inscribir al evento:", error);
         }
-        return returnEntity; // Devolver la entidad insertada
+        return returnEntity; 
       }
       
       async eliminarInscripcion(id,id_user) {

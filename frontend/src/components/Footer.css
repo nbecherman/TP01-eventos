@@ -1,8 +1,22 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1 0 auto;
+}
+
 .footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #f1f1f1;
-    position: relative;
-    bottom: 0;
-    width: 100%;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  text-align: center;
+  padding: 20px 0;
+  width: 100%;
+  flex-shrink: 0;
 }
