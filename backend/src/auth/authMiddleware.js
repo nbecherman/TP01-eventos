@@ -8,7 +8,7 @@ export default async function (req,res,next){
         const payload=await DecryptToken(token); //manda token a jwt que le devuelve el payload
         if(payload!=null){
             req.user=payload; //id del user por req
-            next(); //continuar 
+            next(); 
         }else{
             res.status(401).send("error en el token") ;
         }

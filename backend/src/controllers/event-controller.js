@@ -11,6 +11,7 @@
 
   const router = express.Router();
   router.get("/", async (request, response) => {
+    
       const Evento = {};
       const limit = request.query.limit || 10; // Valor por defecto - registros por pagina
       const offset = request.query.offset||0;  //empieza desde 0 - del 0-10. punto de inicio
@@ -28,6 +29,18 @@
       }
   });
     
+
+  router.get("/eventEnrollmentByUser", authMiddleware, async(request,response) =>{       
+    const id_creator_user = request.user.id;
+     try {
+       const getEnrrolmentsByUserId = await EventService.getEnrrolmentsByUserId(id_creator_user);
+       return response.status(200).json(getEnrrolmentsByUserId);
+     } catch (error) {
+       console.error("Un Error en el controller", error);
+       return response.json("Un Error");
+ 
+   } 
+ });
 
     router.get("/:id",async (request,response) =>{   //terminado (:
       let id = request.params.id;
@@ -47,6 +60,7 @@
           return response.json("Un Error");
         }
       } else {
+        
         return response.json("El parámetro ID no cumple con el tipo de dato esperado.");
       }
     });
@@ -72,7 +86,6 @@
       } 
     });
 
-    
     router.post("/", authMiddleware, async (request, response) => { // postman
       const Evento = {};
       Evento.name = request.body.name;

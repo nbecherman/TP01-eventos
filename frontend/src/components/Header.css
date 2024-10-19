@@ -10,6 +10,15 @@
 .logo {
   font-size: 24px;
   font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.logo:hover {
+  color: white;
+}
+a {
+  text-decoration: none;
 }
 
 .user-info {
@@ -28,4 +37,5 @@
 .logout-button {
   background-color: var(--secondary-color);
   color: var(--text-color);
+  margin-right: 10px;
 }

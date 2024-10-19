@@ -39,6 +39,13 @@ export default class eventService {
     return getAllParticipantes;
   }
 
+  async getEnrrolmentsByUserId(id_creator_user)
+  {
+    const getEnrrolmentsByUserId = await EventRepository.getEnrrolmentsByUserId(id_creator_user);
+    return getEnrrolmentsByUserId;
+  }
+  
+
   async createEvent(evento)
   {
     const returnEntity = await EventRepository.createEvent(evento);

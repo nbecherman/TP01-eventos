@@ -63,7 +63,6 @@ h1, h2, h3 {
   color: var(--primary-color);
 }
 
-/* Estilos para el footer */
 footer {
   background-color: var(--secondary-color);
   color: var(--text-color);

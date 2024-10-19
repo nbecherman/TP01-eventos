@@ -468,10 +468,27 @@ async updateEvent(evento) {
         
       }
 
+
+      async getEnrrolmentsByUserId(id){
+        var returnEntity=null        
+        try{
+          const sql = "SELECT * FROM events INNER JOIN event_enrollments ON events.id = event_enrollments.id_event WHERE event_enrollments.id_user = $1";
+          const values=[id]
+          const result= await this.DBClient.query(sql,values)
+         if (result.rows.length>0) {
+          returnEntity=result.rows;
+          
+         }
+         }catch(error){
+          console.log(error);
+         }
+         return returnEntity;
+        
+        }
       async getEnrolmentsById(id){
         var returnEntity=null
         try{
-        const sql="SELECT * FROM event_enrrolments WHERE id_event=$1"
+        const sql="SELECT * FROM event_enrollments WHERE id_event=$1"
         const values=[id]
         const result= await this.DBClient.query(sql,values)
         if (result.rows.length>0) {
