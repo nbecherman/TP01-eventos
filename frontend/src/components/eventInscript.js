@@ -43,7 +43,7 @@ const EventInscript = () => {
                         </li>
                     ))
                 ) : (
-                    <p>{error || 'No hay eventos disponibles'}</p>
+                    <p>{error || 'No te inscribiste a ningun evento '}</p>
                 )}
             </ul>
         </div>
