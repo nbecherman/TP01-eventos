@@ -61,16 +61,6 @@ const EditEventForm = ({ event, onClose, setEvents, events, token }) => {
                 />
             </label>
             <label>
-                ID Usuario Creador:
-                <input 
-                    type="number" 
-                    name="id_creator_user" 
-                    value={formData.id_creator_user} 
-                    onChange={handleChange} 
-                    required 
-                />
-            </label>
-            <label>
                 ID Locación:
                 <input 
                     type="number" 
