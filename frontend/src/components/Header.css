@@ -17,6 +17,7 @@
 .logo:hover {
   color: white;
 }
+
 a {
   text-decoration: none;
 }
@@ -34,8 +35,33 @@ a {
   margin-right: 20px;
 }
 
+.toggle-nav-button {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  margin-right: 10px;
+}
+
 .logout-button {
   background-color: var(--secondary-color);
   color: var(--text-color);
   margin-right: 10px;
+}
+
+.additional-nav-buttons {
+  display: flex;
+  gap: 10px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.additional-nav-buttons.visible {
+  max-height: 100px; /* Adjust based on button height */
+  opacity: 1;
+}
+
+.nav-button {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
 }

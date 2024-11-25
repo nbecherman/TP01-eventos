@@ -49,3 +49,32 @@
   text-align: center;
   margin-bottom: 20px;
 }
+
+
+.event-button {
+  font-size: 18px; /* Tamaño más grande */
+  padding: 10px 20px; /* Espaciado interno */
+  margin: 10px; /* Separación entre botones */
+  border-radius: 5px; /* Bordes redondeados */
+  border: 2px solid #007BFF; /* Borde azul */
+  background-color: #f0f8ff; /* Fondo claro */
+  color: #007BFF; /* Texto azul */
+  cursor: pointer; /* Cambia el cursor al pasar */
+  transition: all 0.3s ease; /* Animación suave */
+}
+
+.event-button:hover {
+  background-color: #007BFF; /* Fondo azul */
+  color: white; /* Texto blanco */
+}
+
+.event-button.delete {
+  border: 2px solid #FF4C4C; /* Borde rojo */
+  background-color: #FFE5E5; /* Fondo claro */
+  color: #FF4C4C; /* Texto rojo */
+}
+
+.event-button.delete:hover {
+  background-color: #FF4C4C; /* Fondo rojo */
+  color: white; /* Texto blanco */
+}

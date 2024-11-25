@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { UserContext } from '../context/UserContext';
 import FormularioEvento from './formulario';
-import Modal from './modal';
+import Modal from './Modal';
 import './Home.css'; 
 
 const Home = () => {

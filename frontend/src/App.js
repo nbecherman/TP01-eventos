@@ -6,6 +6,7 @@ import Login from './components/login';
 import Register from './components/Register';
 import Home from './components/home';
 import EventInscript from './components/eventInscript';
+import EventLocation from './components/EventLocations';
 
 import './App.css';
 import { UserProvider, UserContext } from './context/UserContext'; 
@@ -23,6 +24,8 @@ function App() {
                         <Route path="/register" element={<Register />} />
                         <Route path="/home" element={token ? <Home /> : <Navigate to="/" />} />
                         <Route path="/inscript" element={token ? <EventInscript /> : <Navigate to="/" />} />
+                        <Route path="/locations" element={token ? <EventLocation /> : <Navigate to="/" />} />
+
                     </Routes>
                 </main>
             </div>
