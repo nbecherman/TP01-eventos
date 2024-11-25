@@ -24,7 +24,7 @@ const EventLocations = () => {
             }
         } catch (error) {
             console.error('Error fetching events:', error);
-            setError(error.response?.data?.error || 'Error al cargar los eventos');
+            setError(error.response?.data?.error || 'No tienes locations');
         }
     };
     const handleDelete = async (id) => {
