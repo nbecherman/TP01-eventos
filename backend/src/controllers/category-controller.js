@@ -106,7 +106,7 @@
           }
           else
           {
-          return response.status(404).json("El id se encuentra en uso");
+          return response.status(404).json("La categoria se encuentra en uso");
           }
         } catch (error) {
         }
