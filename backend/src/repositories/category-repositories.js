@@ -73,46 +73,51 @@ export default class categoryRepository
               console.log(error);
             }
           }  
-
           async updateCategory(categoria) {
-            let returnEntity = null;
-            let query = ''; 
+            let updatedCategory = null;
+            let query = '';
         
-                query = `
-                    UPDATE event_categories
-                    SET `;
-                
-                const values = []; 
-                const conditions = [];
-                if (categoria.name) {
-                    conditions.push(`name = $${values.length + 1}`);
-                    values.push(categoria.name);
+            query = `
+                UPDATE event_categories
+                SET `;
+        
+            const values = [];
+            const conditions = [];
+            
+            // Construye las columnas a actualizar dinámicamente
+            if (categoria.name) {
+                conditions.push(`name = $${values.length + 1}`);
+                values.push(categoria.name);
+            }
+            if (categoria.display_order) {
+                conditions.push(`display_order = $${values.length + 1}`);
+                values.push(categoria.display_order);
+            }
+        
+            if (conditions.length > 0) {
+                query += conditions.join(", ");
+                query += ` WHERE id = $${values.length + 1} RETURNING *;`; // Agrega RETURNING *
+                values.push(categoria.id);
+            } else {
+                console.error("No fields to update");
+                return null;
+            }
+        
+            try {
+                const result = await this.DBClient.query(query, values);
+                if (result.rowCount > 0) {
+                    updatedCategory = result.rows[0]; // Obtén la fila actualizada
                 }
-                if (categoria.display_order) {
-                    conditions.push(`display_order = $${values.length + 1}`);
-                    values.push(categoria.display_order);
-                }
-                if (conditions.length > 0) {
-                    query += conditions.join(", ");
-                    query += ` WHERE id = $${values.length + 1}`; 
-                    values.push(categoria.id);
-                }else {
-                    console.error("No fields");
-                    return null; 
-                  }
-                try {
-                      const result = await this.DBClient.query(query, values);
-                      if (result.rowCount > 0) {
-                          returnEntity = true;
-                      }
-                  } catch (error) {
-                      console.error("Error executing query:", error);
-                  }
+            } catch (error) {
+                console.error("Error executing query:", error);
+            }
+        
             console.log("Query:", query);
             console.log("Values:", values);
-            console.log("Result:", returnEntity);
-            return returnEntity;
+            console.log("Updated Category:", updatedCategory);
+            return updatedCategory; // Devuelve el objeto actualizado
         }
+        
 
         async deleteCategory(id) {
             var returnEntity = null;

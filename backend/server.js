@@ -19,7 +19,7 @@ app.use("/api/user", UserController );
 app.use("/api/province", ProvinciasController );  
 app.use("/api/location", LocationController );  
 app.use("/api/event-location", EventLocationController);  
-app.use("/api/event-category", CategoryController );  
+  app.use("/api/event-category", CategoryController );  
 
 
 app.listen(port, () => {
