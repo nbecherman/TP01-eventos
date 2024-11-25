@@ -16,25 +16,58 @@ const EditEventForm = ({ event, onClose, setEvents, events, token }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const validateForm = () => {
+        const errors = [];
+        if (formData.name.length < 3) {
+            errors.push("El nombre debe tener al menos 3 caracteres.");
+        }
+        if (formData.full_address.length < 3) {
+            errors.push("La dirección debe tener al menos 3 caracteres.");
+        }
+        if (!formData.id_location || formData.id_location <= 0) {
+            errors.push("El ID de locación debe ser un número positivo.");
+        }
+        if (formData.latitude && isNaN(formData.latitude)) {
+            errors.push("La latitud debe ser un número válido.");
+        }
+        if (formData.longitude && isNaN(formData.longitude)) {
+            errors.push("La longitud debe ser un número válido.");
+        }
+        if (!formData.max_capacity || formData.max_capacity <= 0) {
+            errors.push("La capacidad máxima debe ser un número positivo.");
+        }
+        return errors;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validar formulario
+        const errors = validateForm();
+        if (errors.length > 0) {
+            alert(errors.join("\n")); // Mostrar errores en un alert
+            return;
+        }
+
         try {
             const response = await axios.put(
                 `http://localhost:3100/api/event-location/${event.id}`,
                 formData,
                 { headers: { 'Authorization': `Bearer ${token}` } }
             );
-    
+
             if (response.status === 200) {
                 console.log(response);
                 const updatedEvent = response.data;
                 setEvents(events.map(ev => (ev.id === updatedEvent.id ? updatedEvent : ev)));
-                onClose(); 
+                onClose();
             } else {
                 console.error('Error en la actualización:', response.data.message);
+                alert(`Error en la actualización: ${response.data.message}`);
             }
         } catch (error) {
             console.error('Error al enviar la solicitud:', error);
+            alert('Ocurrió un error al enviar la solicitud. Revisa la consola para más detalles.');
         }
     };
 
@@ -77,7 +110,6 @@ const EditEventForm = ({ event, onClose, setEvents, events, token }) => {
                     name="latitude" 
                     value={formData.latitude} 
                     onChange={handleChange} 
-                    required 
                 />
             </label>
             <label>
@@ -87,7 +119,6 @@ const EditEventForm = ({ event, onClose, setEvents, events, token }) => {
                     name="longitude" 
                     value={formData.longitude} 
                     onChange={handleChange} 
-                    required 
                 />
             </label>
             <label>
