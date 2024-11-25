@@ -36,19 +36,13 @@ try {
       }
   }
   if (eventLocation.id_location) {
-   const locationExists = await locationService.getEventLocationById(eventLocation.id_location);
+   const locationExists = await locationService.getLocalidadById(eventLocation.id_location);
+   console.log(locationExists);
       if (!locationExists) 
           {
               return response.status(400).json("Location ID no existe");
           } 
   }
-  if (eventLocation.id_location) {
-      const locationExists = await locationService.getEventLocationById(eventLocation.id_location);
-         if (!locationExists) 
-             {
-                 return response.status(400).json("Location ID no existe");
-             } 
-     }
      if (eventLocation.latitude) {
       if(!isNaN(eventLocation.latitude)){
       }else{
