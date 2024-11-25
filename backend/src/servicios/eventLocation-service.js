@@ -62,8 +62,8 @@ export default class eventLocation
              
              async UpdateEventLocation(eventLoc) 
              {
-                    await EventLocation.UpdateEventLocation(eventLoc);
-                    return "actualizado";
+                    const result = await EventLocation.UpdateEventLocation(eventLoc);
+                    return result;
              }   
 
              async deleteEventLocation(id) 

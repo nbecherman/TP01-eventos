@@ -9,6 +9,72 @@ const router = express.Router();
 const EventLocationService = new eventLocationService();
 const EventService = new eventService();
 const locationService = new LocationService();
+router.put("/:id", AuthMiddleware, async (request, response) => {
+  console.log("aaaaaaaaaaaaaaaaa");
+  const eventLocation = {}
+  eventLocation.id = request.params.id
+  eventLocation.name = request.body.name
+  eventLocation.id_location = request.body.id_location
+  eventLocation.full_address = request.body.full_address
+  eventLocation.max_capacity = request.body.max_capacity
+  eventLocation.latitude = request.body.latitude
+  eventLocation.longitude = request.body.longitude
+  eventLocation.id_creator_user = request.user.id;
+try {
+  
+
+
+  if (eventLocation.name) {
+      if (eventLocation.name.length < 3) {
+          return response.status(400).json("nombre invalido ");
+
+      }
+  }
+  if (eventLocation.full_address) {
+      if (eventLocation.full_address.length < 3) {
+          return response.status(400).json("full_addres invalido");
+      }
+  }
+  if (eventLocation.id_location) {
+   const locationExists = await locationService.getEventLocationById(eventLocation.id_location);
+      if (!locationExists) 
+          {
+              return response.status(400).json("Location ID no existe");
+          } 
+  }
+  if (eventLocation.id_location) {
+      const locationExists = await locationService.getEventLocationById(eventLocation.id_location);
+         if (!locationExists) 
+             {
+                 return response.status(400).json("Location ID no existe");
+             } 
+     }
+     if (eventLocation.latitude) {
+      if(!isNaN(eventLocation.latitude)){
+      }else{
+        return response.status(400).send("Latitude no es un numero");
+      } 
+    }
+    if (eventLocation.longitude ) {
+      if(!isNaN(eventLocation.longitude)){ 
+      }else{
+        return response.status(400).send("Longitud no es un numero");
+      } }
+
+          const capacity = Number(eventLocation.max_capacity);
+          if (!isNaN(capacity)) {
+              if (capacity <= 0) {
+                  return response.status(400).json("Error capacidad maxima");
+              }
+          }
+          
+        const updateEvLoc = await EventLocationService.UpdateEventLocation(eventLocation);
+        return response.status(200).json(updateEvLoc);
+} catch (error) {
+  console.log(error);
+  return response.status(500).json({ error: "Error" });
+}
+});
 
 // Ruta para obtener todas las event_locations del usuario autenticado, con paginación
 router.get("/", AuthMiddleware, async (request, response) => {
@@ -102,71 +168,6 @@ router.post("/", AuthMiddleware, async (request, response) => {
 });
 
 // Ruta para actualizar una event_location existente
-router.put("/", AuthMiddleware, async (request, response) => {
-    const eventLocation = {}
-    eventLocation.id = request.body.id
-    eventLocation.name = request.body.name
-    eventLocation.id_location = request.body.id_location
-    eventLocation.full_address = request.body.full_address
-    eventLocation.max_capacity = request.body.max_capacity
-    eventLocation.latitude = request.body.latitude
-    eventLocation.longitude = request.body.longitude
-    eventLocation.id_creator_user = request.user.id;
-  try {
-    
-  
-
-    if (eventLocation.name) {
-        if (eventLocation.name.length < 3) {
-            return response.status(400).json("nombre invalido ");
-
-        }
-    }
-    if (eventLocation.full_address) {
-        if (eventLocation.full_address.length < 3) {
-            return response.status(400).json("full_addres invalido");
-        }
-    }
-    if (eventLocation.id_location) {
-     const locationExists = await locationService.getEventLocationById(eventLocation.id_location);
-        if (!locationExists) 
-            {
-                return response.status(400).json("Location ID no existe");
-            } 
-    }
-    if (eventLocation.id_location) {
-        const locationExists = await locationService.getEventLocationById(eventLocation.id_location);
-           if (!locationExists) 
-               {
-                   return response.status(400).json("Location ID no existe");
-               } 
-       }
-       if (eventLocation.latitude) {
-        if(!isNaN(eventLocation.latitude)){
-        }else{
-          return response.status(400).send("Latitude no es un numero");
-        } 
-      }
-      if (eventLocation.longitude ) {
-        if(!isNaN(eventLocation.longitude)){ 
-        }else{
-          return response.status(400).send("Longitud no es un numero");
-        } }
-
-            const capacity = Number(eventLocation.max_capacity);
-            if (!isNaN(capacity)) {
-                if (capacity <= 0) {
-                    return response.status(400).json("Error capacidad maxima");
-                }
-            }
-            
-          const updateEvLoc = await EventLocationService.UpdateEventLocation(eventLocation);
-          return response.status(201).json(updateEvLoc);
-  } catch (error) {
-    console.log(error);
-    return response.status(500).json({ error: "Error" });
-  }
-});
 
 // Ruta para eliminar una event_location específica por ID, solo si pertenece al usuario autenticado
 router.delete("/:id", AuthMiddleware, async (request, response) => {

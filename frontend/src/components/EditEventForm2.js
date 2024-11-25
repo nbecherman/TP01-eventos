@@ -24,12 +24,17 @@ const EditEventForm = ({ event, onClose, setEvents, events, token }) => {
                 formData,
                 { headers: { 'Authorization': `Bearer ${token}` } }
             );
+    
             if (response.status === 200) {
-                setEvents(events.map(ev => (ev.id === event.id ? response.data.updatedEvent : ev))); // Actualiza la lista
-                onClose();
+                console.log(response);
+                const updatedEvent = response.data;
+                setEvents(events.map(ev => (ev.id === updatedEvent.id ? updatedEvent : ev)));
+                onClose(); 
+            } else {
+                console.error('Error en la actualización:', response.data.message);
             }
         } catch (error) {
-            console.error('Error al actualizar el evento:', error);
+            console.error('Error al enviar la solicitud:', error);
         }
     };
 

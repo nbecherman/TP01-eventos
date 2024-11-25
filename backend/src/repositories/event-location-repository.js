@@ -105,63 +105,67 @@ export default class eventLocationRepository
     }
 
     
-
     async UpdateEventLocation(eventLoc) {
         let returnEntity = null;
-        let query = ''; 
+        let query = '';
+        const values = [];
     
-            query = `
-                UPDATE event_locations
-                SET `;
-            
-            const values = []; 
+        query = `UPDATE event_locations SET `;
+        const conditions = [];
     
-            const conditions = [];
-            if (eventLoc.id_location) {
-                conditions.push(`id_location = $${values.length + 1}`);
-                values.push(eventLoc.id_location);
+        if (eventLoc.id_location) {
+            conditions.push(`id_location = $${values.length + 1}`);
+            values.push(eventLoc.id_location);
+        }
+        if (eventLoc.name) {
+            conditions.push(`name = $${values.length + 1}`);
+            values.push(eventLoc.name);
+        }
+        if (eventLoc.full_address) {
+            conditions.push(`full_address = $${values.length + 1}`);
+            values.push(eventLoc.full_address);
+        }
+        if (eventLoc.max_capacity) {
+            conditions.push(`max_capacity = $${values.length + 1}`);
+            values.push(eventLoc.max_capacity);
+        }
+        if (eventLoc.latitude) {
+            conditions.push(`latitude = $${values.length + 1}`);
+            values.push(eventLoc.latitude);
+        }
+        if (eventLoc.longitude) {
+            conditions.push(`longitude = $${values.length + 1}`);
+            values.push(eventLoc.longitude);
+        }
+    
+        if (conditions.length > 0) {
+            query += conditions.join(", ");
+            query += ` WHERE id = $${values.length + 1}`;
+            values.push(eventLoc.id);
+        }
+    
+        try {
+            const result = await this.DBClient.query(query, values);
+            if (result.rowCount > 0) {
+                // Consulta el evento actualizado
+                const fetchQuery = `SELECT * FROM event_locations WHERE id = $1`;
+                const fetchResult = await this.DBClient.query(fetchQuery, [eventLoc.id]);
+    
+                if (fetchResult.rows.length > 0) {
+                    returnEntity = fetchResult.rows[0];
+                }
             }
-            if (eventLoc.name) {
-                conditions.push(`name = $${values.length + 1}`);
-                values.push(eventLoc.name);
-            }
-            if (eventLoc.full_address) {
-                conditions.push(`full_address = $${values.length + 1}`);
-                values.push(eventLoc.full_address);
-            }
-            if (eventLoc.max_capacity) {
-                conditions.push(`max_capacity = $${values.length + 1}`);
-                values.push(eventLoc.max_capacity);
-            }
-            if (eventLoc.latitude) {
-                conditions.push(`latitude = $${values.length + 1}`);
-                values.push(eventLoc.latitude);
-            }
-            if (eventLoc.longitude) {
-                conditions.push(`longitude = $${values.length + 1}`);
-                values.push(eventLoc.longitude);
-            }
-            if (conditions.length > 0) {
-                query += conditions.join(", ");
-                query += ` WHERE id = $${values.length + 1}`; 
-                values.push(eventLoc.id);
-            }
-            try {
-                  const result = await this.DBClient.query(query, values);
-                  if (result.rowCount > 0) {
-                      returnEntity = true;
-                  }
-              } catch (error) {
-                  console.error("Error executing query:", error);
-              }
-              
+        } catch (error) {
+            console.error("Error executing query:", error);
+            throw error; // Lanza el error para que el controlador lo maneje
+        }
     
         console.log("Query:", query);
         console.log("Values:", values);
         console.log("Result:", returnEntity);
         return returnEntity;
-    
     }
+    
 
     async deleteEventLocation(id) {
         try {
